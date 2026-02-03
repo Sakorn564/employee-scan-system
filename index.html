@@ -74,7 +74,6 @@
             gap: 10px;
         }
 
-        /* Employee Cards with Boxes */
         .employee-cards-section {
             margin-top: 30px;
         }
@@ -572,10 +571,6 @@
             background: #f0f4ff;
         }
 
-        tr.duplicate-row {
-            background: #fff3cd;
-        }
-
         .status-badge {
             padding: 5px 15px;
             border-radius: 20px;
@@ -591,11 +586,6 @@
         .status-manual {
             background: #ffc107;
             color: #000;
-        }
-
-        .status-duplicate {
-            background: #ff9800;
-            color: white;
         }
 
         .stats {
@@ -814,6 +804,29 @@
             flex: 1;
         }
 
+        /* Debug Info Box */
+        .debug-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 0.9em;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .debug-box.show {
+            display: block;
+        }
+
+        .debug-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
         @media (max-width: 768px) {
             .main-section {
                 grid-template-columns: 1fr;
@@ -864,9 +877,9 @@
             <div class="card scan-section">
                 <h2>🔍 สแกนหมายเลข</h2>
                 <div class="scan-icon">📷</div>
-                <input type="text" id="scanInput" placeholder="สแกนหมายเลขที่นี่..." autofocus>
-                <p style="color: #666; margin-top: 10px;">
-                    💡 วางเคอร์เซอร์ในช่องและสแกนเลย
+                <input type="text" id="scanInput" placeholder="สแกนหมายเลขที่นี่..." autofocus disabled>
+                <p style="color: #ff6b6b; margin-top: 10px; font-weight: bold;" id="scanWarning">
+                    ⚠️ กรุณา Upload ไฟล์ Excel ก่อนใช้งาน
                 </p>
 
                 <!-- Result Box -->
@@ -903,7 +916,7 @@
                         <strong>BAD ID ที่สแกน:</strong> <span id="badIdScanned">-</span>
                     </div>
                     <div class="manual-input-group">
-                        <input type="text" id="manualInput" placeholder="กรอกรหัสพนักงาน 10 หลัก (เช่น 1000336245)">
+                        <input type="text" id="manualInput" placeholder="กรอกรหัสพนักงาน 10 หลัก (เช่น 1000333210)">
                         <button class="btn btn-warning" onclick="submitManualInput()">✓ ยืนยัน</button>
                         <button class="btn btn-secondary" onclick="cancelManualInput()">✕ ยกเลิก</button>
                     </div>
@@ -927,11 +940,17 @@
                     <h3>คลิกเพื่ออัปโหลดไฟล์ Excel</h3>
                     <p>
                         รองรับไฟล์ .xlsx และ .xls<br>
-                        (ต้องมีคอลัมน์: <strong>รหัสพนักงาน, ชื่อ นามสกุล, BAD ID</strong>)
+                        <strong>ต้องมีคอลัมน์ตามตารางที่กำหนด</strong>
                     </p>
                     <input type="file" id="fileInput" accept=".xlsx,.xls">
                 </div>
                 <div id="uploadStatus" style="text-align: center; color: #667eea; font-weight: bold; margin-bottom: 15px;"></div>
+
+                <!-- Debug Info Box -->
+                <div class="debug-box" id="debugBox">
+                    <h4>🔍 Debug Info</h4>
+                    <div id="debugContent"></div>
+                </div>
 
                 <div class="button-group">
                     <button class="btn btn-success" onclick="downloadTemplate()">
@@ -1098,6 +1117,7 @@
             updateStats();
             updateSavedDatabasesList();
             updateEmployeeCards();
+            enableScanIfDatabaseExists();
             
             // Setup file input
             document.getElementById('fileInput').addEventListener('change', handleFileUpload);
@@ -1128,33 +1148,38 @@
             });
         });
 
+        function enableScanIfDatabaseExists() {
+            if (database.length > 0) {
+                document.getElementById('scanInput').disabled = false;
+                document.getElementById('scanWarning').style.display = 'none';
+            } else {
+                document.getElementById('scanInput').disabled = true;
+                document.getElementById('scanWarning').style.display = 'block';
+            }
+        }
+
         // Toggle checkbox when clicking on div
         function toggleCheckbox(id) {
             const checkbox = document.getElementById(id);
             checkbox.checked = !checkbox.checked;
             
-            // Handle "clear all" logic
             if (id !== 'clearAll' && !checkbox.checked) {
                 document.getElementById('clearAll').checked = false;
             }
         }
 
-        // Show clear data modal
         function showClearDataModal() {
             document.getElementById('clearDataModal').classList.add('show');
         }
 
-        // Close clear data modal
         function closeClearDataModal() {
             document.getElementById('clearDataModal').classList.remove('show');
-            // Reset checkboxes
             document.getElementById('clearScanned').checked = true;
             document.getElementById('clearDatabase').checked = false;
             document.getElementById('clearSavedDb').checked = false;
             document.getElementById('clearAll').checked = false;
         }
 
-        // Confirm clear data
         function confirmClearData() {
             const clearScanned = document.getElementById('clearScanned').checked;
             const clearDatabase = document.getElementById('clearDatabase').checked;
@@ -1177,7 +1202,6 @@
 
             if (!confirm(message)) return;
 
-            // Clear selected data
             if (clearScanned || clearAll) {
                 scannedRecords = [];
                 duplicateScans = [];
@@ -1194,18 +1218,17 @@
                 localStorage.removeItem('savedDatabases');
             }
 
-            // Save and update
             saveToLocalStorage();
             updateStats();
             updateTable();
             updateSavedDatabasesList();
             updateEmployeeCards();
+            enableScanIfDatabaseExists();
             closeClearDataModal();
 
             showNotification('✅ ล้างข้อมูลสำเร็จ!', 'success');
         }
 
-        // Clear scanned records only (quick button)
         function clearScannedRecordsOnly() {
             if (scannedRecords.length === 0 && duplicateScans.length === 0) {
                 showNotification('⚠️ ไม่มีรายการที่สแกนให้ล้าง', 'warning');
@@ -1224,7 +1247,6 @@
             showNotification('✅ ล้างรายการสแกนสำเร็จ!', 'success');
         }
 
-        // Export scanned records
         function exportScannedRecords() {
             if (scannedRecords.length === 0) {
                 showNotification('⚠️ ไม่มีรายการให้ Export', 'warning');
@@ -1233,7 +1255,6 @@
             exportToExcel();
         }
 
-        // Save current database
         function saveCurrentDatabase() {
             if (database.length === 0) {
                 showNotification('❌ ไม่มีข้อมูลให้บันทึก', 'error');
@@ -1253,7 +1274,6 @@
                 savedDate: new Date().toLocaleString('th-TH')
             };
 
-            // Check if name exists
             const existingIndex = savedDatabases.findIndex(db => db.name === dbName);
             if (existingIndex >= 0) {
                 if (confirm('ชื่อนี้มีอยู่แล้ว ต้องการเขียนทับหรือไม่?')) {
@@ -1271,7 +1291,6 @@
             showNotification('✅ บันทึกฐานข้อมูลสำเร็จ!', 'success');
         }
 
-        // Load saved database
         function loadSavedDatabase(dbId) {
             const db = savedDatabases.find(d => d.id === dbId);
             if (!db) return;
@@ -1281,14 +1300,15 @@
             saveToLocalStorage();
             updateStats();
             updateSavedDatabasesList();
+            enableScanIfDatabaseExists();
             
             document.getElementById('uploadStatus').innerHTML = 
                 `✅ โหลดฐานข้อมูล "<strong>${db.name}</strong>" สำเร็จ: ${db.count} รายการ`;
             
             showNotification('✅ โหลดฐานข้อมูลสำเร็จ!', 'success');
+            document.getElementById('scanInput').focus();
         }
 
-        // Delete saved database
         function deleteSavedDatabase(dbId) {
             const db = savedDatabases.find(d => d.id === dbId);
             if (!db) return;
@@ -1301,12 +1321,10 @@
             showNotification('✅ ลบฐานข้อมูลสำเร็จ!', 'success');
         }
 
-        // Update saved databases list
         function updateSavedDatabasesList() {
             const container = document.getElementById('savedDatabasesList');
             const saveBtn = document.getElementById('saveDbBtn');
             
-            // Show/hide save button
             saveBtn.style.display = database.length > 0 ? 'block' : 'none';
 
             if (savedDatabases.length === 0) {
@@ -1328,7 +1346,6 @@
             `).join('');
         }
 
-        // Load saved databases from localStorage
         function loadSavedDatabases() {
             const saved = localStorage.getItem('savedDatabases');
             if (saved) {
@@ -1336,57 +1353,153 @@
             }
         }
 
-        // Load sample data
         function loadSampleData() {
             database = [...sampleData];
             currentDatabaseName = 'ข้อมูลตัวอย่าง';
             saveToLocalStorage();
             updateStats();
             updateSavedDatabasesList();
+            enableScanIfDatabaseExists();
             
             document.getElementById('uploadStatus').innerHTML = 
                 `✅ โหลดข้อมูลตัวอย่างสำเร็จ: <strong>${database.length} รายการ</strong>`;
             
             showNotification('✅ โหลดข้อมูลตัวอย่างสำเร็จ!', 'success');
+            document.getElementById('scanInput').focus();
         }
 
-        // Process scan
+        function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            showNotification('⏳ กำลังอ่านไฟล์...', 'info');
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const data = new Uint8Array(evt.target.result);
+                    const workbook = XLSX.read(data, { type: 'array', raw: false });
+                    
+                    // Get first sheet
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    // Convert to JSON with headers
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false });
+                    
+                    console.log('📊 Raw Data:', jsonData);
+                    
+                    // Get headers (first row)
+                    const headers = jsonData[0];
+                    console.log('📋 Headers:', headers);
+                    
+                    // Show debug info
+                    const debugContent = document.getElementById('debugContent');
+                    debugContent.innerHTML = `
+                        <strong>ไฟล์:</strong> ${file.name}<br>
+                        <strong>จำนวนแถว:</strong> ${jsonData.length}<br>
+                        <strong>หัวคอลัมน์:</strong> ${headers.join(', ')}<br>
+                        <strong>ตัวอย่างแถวที่ 2:</strong> ${jsonData[1] ? jsonData[1].join(', ') : 'ไม่มีข้อมูล'}
+                    `;
+                    document.getElementById('debugBox').classList.add('show');
+                    
+                    // Process data - ใช้ index แทนชื่อคอลัมน์
+                    database = [];
+                    for (let i = 1; i < jsonData.length; i++) {
+                        const row = jsonData[i];
+                        
+                        // ตรวจสอบว่ามีข้อมูลในแถว
+                        if (row && row.length > 0 && row[1]) {
+                            const employee = {
+                                no: String(row[0] || i).trim(),
+                                empId: String(row[1] || '').trim(),
+                                badId: String(row[2] || '').trim(),
+                                name: String(row[3] || '').trim(),
+                                batch: String(row[4] || '').trim(),
+                                phone: String(row[5] || '').trim(),
+                                dep: String(row[6] || '').trim(),
+                                area: String(row[7] || '').trim(),
+                                position: String(row[8] || '').trim(),
+                                shift: String(row[9] || '').trim()
+                            };
+                            
+                            // ต้องมีอย่างน้อย empId และ name
+                            if (employee.empId && employee.name) {
+                                database.push(employee);
+                            }
+                        }
+                    }
+
+                    console.log('✅ Processed Data:', database);
+
+                    if (database.length === 0) {
+                        showNotification('❌ ไม่พบข้อมูลในไฟล์ กรุณาตรวจสอบรูปแบบไฟล์', 'error');
+                        document.getElementById('uploadStatus').innerHTML = 
+                            `<span style="color: #ff6b6b;">❌ ไม่พบข้อมูลในไฟล์</span>`;
+                        return;
+                    }
+
+                    currentDatabaseName = file.name.replace(/\.[^/.]+$/, '');
+                    saveToLocalStorage();
+                    updateStats();
+                    updateSavedDatabasesList();
+                    enableScanIfDatabaseExists();
+                    
+                    document.getElementById('uploadStatus').innerHTML = 
+                        `✅ อัปโหลดสำเร็จ: <strong>${database.length} รายการ</strong>`;
+                    
+                    showNotification('✅ อัปโหลดฐานข้อมูลสำเร็จ! พบ ' + database.length + ' รายการ', 'success');
+                    document.getElementById('scanInput').focus();
+                    
+                    // Hide debug box after 5 seconds
+                    setTimeout(() => {
+                        document.getElementById('debugBox').classList.remove('show');
+                    }, 5000);
+
+                } catch (error) {
+                    console.error('❌ Error:', error);
+                    showNotification('❌ เกิดข้อผิดพลาด: ' + error.message, 'error');
+                    document.getElementById('uploadStatus').innerHTML = 
+                        `<span style="color: #ff6b6b;">❌ เกิดข้อผิดพลาด: ${error.message}</span>`;
+                }
+            };
+            
+            reader.onerror = function() {
+                showNotification('❌ ไม่สามารถอ่านไฟล์ได้', 'error');
+            };
+            
+            reader.readAsArrayBuffer(file);
+        }
+
         function processScan(scannedId) {
             if (!scannedId) return;
 
             const scanInput = document.getElementById('scanInput');
             currentBadId = scannedId;
 
-            // Hide previous results
             document.getElementById('resultBox').classList.remove('show');
             document.getElementById('manualInputSection').classList.remove('show');
 
-            // Try to find by employee ID first
             let person = database.find(p => p.empId === scannedId);
             
-            // If not found, try to find by BAD ID
             if (!person) {
                 person = database.find(p => p.badId === scannedId);
             }
 
             if (!person) {
-                // Show manual input section
                 showManualInput(scannedId);
                 scanInput.value = '';
                 return;
             }
 
-            // Check for duplicate (same employee ID scanned today)
             const today = new Date().toLocaleDateString('th-TH');
             const existingRecord = scannedRecords.find(r => 
                 r.empId === person.empId && r.date === today
             );
 
             if (existingRecord) {
-                // Duplicate scan - show but don't count
                 showDuplicateResult(person, existingRecord);
                 
-                // Add to duplicate list
                 const now = new Date();
                 duplicateScans.push({
                     ...person,
@@ -1398,17 +1511,13 @@
                 saveToLocalStorage();
                 updateStats();
             } else {
-                // New scan - create record
                 createRecord(person, 'auto');
             }
 
             scanInput.value = '';
-            
-            // Refocus input
             setTimeout(() => scanInput.focus(), 100);
         }
 
-        // Show duplicate result
         function showDuplicateResult(person, existingRecord) {
             document.getElementById('resultEmpId').textContent = person.empId;
             document.getElementById('resultName').textContent = person.name;
@@ -1418,7 +1527,6 @@
             document.getElementById('resultDate').textContent = now.toLocaleDateString('th-TH');
             document.getElementById('resultTime').textContent = now.toLocaleTimeString('th-TH');
             
-            // Show duplicate warning
             document.getElementById('previousScanTime').textContent = 
                 `${existingRecord.date} เวลา ${existingRecord.time}`;
             document.getElementById('duplicateWarning').style.display = 'block';
@@ -1432,7 +1540,6 @@
             showNotification(`⚠️ ซ้ำ! ${person.name} เคยสแกนแล้ว`, 'duplicate');
         }
 
-        // Show manual input
         function showManualInput(badId) {
             document.getElementById('badIdScanned').textContent = badId;
             document.getElementById('manualInputSection').classList.add('show');
@@ -1442,7 +1549,6 @@
             showNotification('⚠️ ไม่พบข้อมูลในระบบ - กรุณากรอกรหัสพนักงาน', 'warning');
         }
 
-        // Submit manual input
         function submitManualInput() {
             const manualEmpId = document.getElementById('manualInput').value.trim();
             
@@ -1451,7 +1557,6 @@
                 return;
             }
 
-            // Find person by employee ID
             const person = database.find(p => p.empId === manualEmpId);
             
             if (!person) {
@@ -1459,17 +1564,14 @@
                 return;
             }
 
-            // Check for duplicate
             const today = new Date().toLocaleDateString('th-TH');
             const existingRecord = scannedRecords.find(r => 
                 r.empId === person.empId && r.date === today
             );
 
             if (existingRecord) {
-                // Duplicate scan
                 showDuplicateResult(person, existingRecord);
                 
-                // Add to duplicate list
                 const now = new Date();
                 duplicateScans.push({
                     ...person,
@@ -1482,25 +1584,19 @@
                 saveToLocalStorage();
                 updateStats();
             } else {
-                // Create record with manual entry
                 createRecord({...person, badId: currentBadId}, 'manual');
             }
             
-            // Hide manual input section
             document.getElementById('manualInputSection').classList.remove('show');
-            
-            // Refocus scan input
             document.getElementById('scanInput').focus();
         }
 
-        // Cancel manual input
         function cancelManualInput() {
             document.getElementById('manualInputSection').classList.remove('show');
             document.getElementById('scanInput').focus();
             currentBadId = '';
         }
 
-        // Create record
         function createRecord(person, type) {
             const now = new Date();
             const date = now.toLocaleDateString('th-TH');
@@ -1511,35 +1607,22 @@
                 date: date,
                 time: time,
                 timestamp: now.getTime(),
-                type: type // 'auto' or 'manual'
+                type: type
             };
 
-            // Add to records
             scannedRecords.unshift(record);
-            
-            // Save to localStorage
             saveToLocalStorage();
-
-            // Show result
             showResult(record);
-
-            // Update table
             updateTable();
-            
-            // Update employee cards
             updateEmployeeCards();
-
-            // Update stats
             updateStats();
 
-            // Show notification
             const message = type === 'manual' 
                 ? '✅ บันทึกสำเร็จ (Manual): ' + record.name
                 : '✅ บันทึกสำเร็จ: ' + record.name;
             showNotification(message, 'success');
         }
 
-        // Show result
         function showResult(record) {
             document.getElementById('resultEmpId').textContent = record.empId;
             document.getElementById('resultName').textContent = record.name;
@@ -1547,7 +1630,6 @@
             document.getElementById('resultDate').textContent = record.date;
             document.getElementById('resultTime').textContent = record.time;
             
-            // Hide duplicate warning
             document.getElementById('duplicateWarning').style.display = 'none';
             
             const resultBox = document.getElementById('resultBox');
@@ -1557,7 +1639,6 @@
             setTimeout(() => resultBox.classList.add('show'), 10);
         }
 
-        // Update employee cards - แก้ไขให้ตรงกับตาราง
         function updateEmployeeCards() {
             const container = document.getElementById('employeeCardsContainer');
             
@@ -1641,7 +1722,6 @@
             `).join('');
         }
 
-        // Delete record
         function deleteRecord(index) {
             if (confirm('ต้องการลบรายการนี้หรือไม่?')) {
                 scannedRecords.splice(index, 1);
@@ -1653,50 +1733,6 @@
             }
         }
 
-        // Handle file upload
-        function handleFileUpload(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const jsonData = XLSX.utils.sheet_to_json(firstSheet);
-
-                    // Process data with all fields
-                    database = jsonData.map(row => ({
-                        empId: String(row['รหัสพนักงาน'] || row['รหัส'] || row['ID'] || '').trim(),
-                        name: String(row['ชื่อ นามสกุล'] || row['ชื่อ-นามสกุล'] || row['Name'] || '').trim(),
-                        badId: String(row['BAD ID'] || row['BadID'] || row['BADID'] || row['Bad ID'] || '').trim(),
-                        batch: String(row['รุ่นที่เข้างาน'] || row['รุ่น'] || row['Batch'] || '').trim(),
-                        phone: String(row['เบอร์โทรศัพท์'] || row['เบอร์'] || row['Phone'] || '').trim(),
-                        dep: String(row['Dep.'] || row['Department'] || row['แผนก'] || '').trim(),
-                        area: String(row['Area'] || row['พื้นที่'] || '').trim(),
-                        position: String(row['ตำแหน่งงาน'] || row['Position'] || '').trim(),
-                        shift: String(row['กะการทำงาน'] || row['กะ'] || row['Shift'] || '').trim()
-                    })).filter(item => item.empId && item.name);
-
-                    currentDatabaseName = file.name.replace(/\.[^/.]+$/, '');
-                    saveToLocalStorage();
-                    updateStats();
-                    updateSavedDatabasesList();
-                    
-                    document.getElementById('uploadStatus').innerHTML = 
-                        `✅ อัปโหลดสำเร็จ: <strong>${database.length} รายการ</strong>`;
-                    
-                    showNotification('✅ อัปโหลดฐานข้อมูลสำเร็จ!', 'success');
-                } catch (error) {
-                    console.error('Error:', error);
-                    showNotification('❌ เกิดข้อผิดพลาดในการอ่านไฟล์', 'error');
-                }
-            };
-            reader.readAsArrayBuffer(file);
-        }
-
-        // Update table - แก้ไขให้ตรงกับตาราง
         function updateTable() {
             const tbody = document.getElementById('dataTableBody');
             
@@ -1732,7 +1768,6 @@
             `).join('');
         }
 
-        // Update statistics
         function updateStats() {
             document.getElementById('totalScans').textContent = scannedRecords.length;
             document.getElementById('duplicateScans').textContent = duplicateScans.length;
@@ -1743,7 +1778,6 @@
             document.getElementById('todayScans').textContent = todayScans;
         }
 
-        // Export to Excel - แก้ไขให้ตรงกับตาราง
         function exportToExcel() {
             if (scannedRecords.length === 0) {
                 showNotification('ไม่มีข้อมูลให้ Export', 'error');
@@ -1782,7 +1816,6 @@
             showNotification('✅ Export สำเร็จ!', 'success');
         }
 
-        // Download template
         function downloadTemplate() {
             const ws = XLSX.utils.json_to_sheet(sampleData.map((item, index) => ({
                 'No.': index + 1,
@@ -1809,7 +1842,6 @@
             showNotification('✅ ดาวน์โหลดไฟล์ตัวอย่างสำเร็จ!', 'success');
         }
 
-        // Show notification
         function showNotification(message, type = 'success') {
             const notification = document.getElementById('notification');
             notification.textContent = message;
@@ -1820,7 +1852,6 @@
             }, 3000);
         }
 
-        // Local Storage
         function saveToLocalStorage() {
             localStorage.setItem('database', JSON.stringify(database));
             localStorage.setItem('currentDatabaseName', currentDatabaseName);
