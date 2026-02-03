@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบบแสกนและจัดการข้อมูลพนักงาน</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,14 +14,14 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Prompt', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 30px 20px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
@@ -28,59 +29,53 @@
         .step-card {
             background: white;
             border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
 
         .step-header {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
         }
 
         .step-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2em;
+            font-size: 1.5em;
         }
 
         .step-title {
-            font-size: 1.3em;
-            color: #667eea;
-            font-weight: bold;
+            font-size: 1.1em;
+            color: #5a67d8;
+            font-weight: 600;
         }
 
-        /* Upload Section */
-        .upload-section {
-            background: #f8f9fa;
-            padding: 20px;
+        /* Step 1 - Upload */
+        .upload-info {
+            background: #f7fafc;
+            padding: 15px;
             border-radius: 10px;
             margin-bottom: 15px;
+            font-size: 0.95em;
+            color: #4a5568;
         }
 
         .upload-label {
             display: inline-block;
-            padding: 12px 30px;
-            background: #667eea;
+            padding: 10px 25px;
+            background: #5a67d8;
             color: white;
             border-radius: 8px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 500;
+            font-size: 0.95em;
             transition: all 0.3s;
+            margin-bottom: 15px;
         }
 
         .upload-label:hover {
-            background: #764ba2;
+            background: #4c51bf;
             transform: translateY(-2px);
         }
 
@@ -88,121 +83,119 @@
             display: none;
         }
 
-        .file-info {
-            margin-top: 10px;
-            color: #667eea;
-            font-weight: bold;
-        }
-
-        .button-group {
+        .button-row {
             display: flex;
             gap: 10px;
             margin-top: 15px;
         }
 
         .btn {
-            padding: 12px 25px;
+            padding: 10px 20px;
             border: none;
             border-radius: 8px;
-            font-weight: bold;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
-            font-size: 1em;
+            font-size: 0.9em;
+            font-family: 'Prompt', sans-serif;
         }
 
-        .btn-debug {
-            background: #ffc107;
-            color: #000;
-        }
-
-        .btn-debug:hover {
-            background: #e0a800;
-        }
-
-        .btn-clear-data {
-            background: #667eea;
+        .btn-warning {
+            background: #f59e0b;
             color: white;
         }
 
-        .btn-clear-data:hover {
-            background: #764ba2;
+        .btn-warning:hover {
+            background: #d97706;
         }
 
-        /* Form Section */
-        .form-section {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 10px;
+        .btn-primary {
+            background: #5a67d8;
+            color: white;
         }
 
-        .form-group {
+        .btn-primary:hover {
+            background: #4c51bf;
+        }
+
+        /* Step 2 - Form */
+        .form-row {
             margin-bottom: 20px;
         }
 
         .form-label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
-            font-weight: 600;
+            color: #2d3748;
+            font-weight: 500;
+            font-size: 0.9em;
         }
 
         .form-label .required {
-            color: #dc3545;
+            color: #e53e3e;
         }
 
         .form-input {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
+            padding: 12px 15px;
+            border: 1px solid #e2e8f0;
             border-radius: 8px;
-            font-size: 1em;
+            font-size: 0.95em;
+            font-family: 'Prompt', sans-serif;
             transition: all 0.3s;
+            background: white;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #5a67d8;
+            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.1);
         }
 
         .form-input::placeholder {
-            color: #999;
+            color: #a0aec0;
+        }
+
+        .form-input:disabled,
+        .form-input:read-only {
+            background: #f7fafc;
+            color: #718096;
         }
 
         .form-buttons {
             display: flex;
-            gap: 15px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 25px;
         }
 
-        .btn-submit {
-            background: #28a745;
+        .btn-success {
+            background: #10b981;
             color: white;
         }
 
-        .btn-submit:hover {
-            background: #218838;
+        .btn-success:hover {
+            background: #059669;
         }
 
-        .btn-clear {
-            background: #667eea;
+        .btn-secondary {
+            background: #5a67d8;
             color: white;
         }
 
-        .btn-clear:hover {
-            background: #764ba2;
+        .btn-secondary:hover {
+            background: #4c51bf;
         }
 
-        /* Summary Stats */
+        /* Step 3 - Summary */
         .summary-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
         }
 
         .stat-box {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5a67d8 0%, #667eea 100%);
             color: white;
             padding: 25px;
             border-radius: 12px;
@@ -210,22 +203,23 @@
         }
 
         .stat-number {
-            font-size: 3em;
-            font-weight: bold;
+            font-size: 2.5em;
+            font-weight: 700;
             margin-bottom: 5px;
         }
 
         .stat-label {
-            font-size: 1em;
-            opacity: 0.9;
+            font-size: 0.95em;
+            opacity: 0.95;
+            font-weight: 400;
         }
 
-        /* Table Section */
-        .table-container {
+        /* Table */
+        .table-wrapper {
             background: white;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             margin-bottom: 20px;
         }
 
@@ -235,105 +229,131 @@
         }
 
         .data-table thead {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #5a67d8;
             color: white;
         }
 
         .data-table th {
-            padding: 15px;
+            padding: 15px 12px;
             text-align: left;
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 0.9em;
         }
 
         .data-table td {
-            padding: 15px;
+            padding: 15px 12px;
             border-bottom: 1px solid #f0f0f0;
+            font-size: 0.9em;
+            color: #4a5568;
         }
 
         .data-table tbody tr:hover {
-            background: #f8f9fa;
+            background: #f7fafc;
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
         }
 
         .no-data {
             text-align: center;
-            padding: 40px;
-            color: #999;
-            font-size: 1.1em;
+            padding: 50px 20px;
+            color: #a0aec0;
+            font-size: 0.95em;
         }
 
-        .export-buttons {
+        .action-cell {
             display: flex;
-            gap: 15px;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 500;
+            font-family: 'Prompt', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .btn-edit {
+            background: #fbbf24;
+            color: #78350f;
+        }
+
+        .btn-edit:hover {
+            background: #f59e0b;
+        }
+
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #dc2626;
+        }
+
+        /* Export Section */
+        .export-section {
+            display: flex;
+            gap: 12px;
             justify-content: center;
         }
 
         .btn-export {
-            background: #e91e63;
+            background: #ec4899;
             color: white;
         }
 
         .btn-export:hover {
-            background: #c2185b;
+            background: #db2777;
         }
 
-        .btn-clear-list {
-            background: #667eea;
+        .btn-clear {
+            background: #5a67d8;
             color: white;
         }
 
-        .btn-clear-list:hover {
-            background: #764ba2;
+        .btn-clear:hover {
+            background: #4c51bf;
         }
 
-        /* Status Message */
-        .status-message {
-            padding: 15px;
+        /* Status Alert */
+        .alert {
+            padding: 15px 20px;
             border-radius: 10px;
             margin-bottom: 20px;
-            font-weight: bold;
-            text-align: center;
+            font-weight: 500;
+            font-size: 0.95em;
+            display: none;
         }
 
-        .status-success {
-            background: #d4edda;
-            color: #155724;
-            border: 2px solid #c3e6cb;
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
         }
 
-        .status-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 2px solid #f5c6cb;
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
         }
 
-        .status-info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 2px solid #bee5eb;
-        }
-
-        /* Action Buttons in Table */
-        .action-btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9em;
-            font-weight: bold;
-            margin-right: 5px;
-        }
-
-        .btn-edit {
-            background: #ffc107;
-            color: #000;
-        }
-
-        .btn-delete {
-            background: #dc3545;
-            color: white;
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-left: 4px solid #3b82f6;
         }
 
         @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
             .step-card {
                 padding: 20px;
             }
@@ -343,107 +363,117 @@
             }
 
             .form-buttons,
-            .export-buttons {
+            .export-section,
+            .button-row {
                 flex-direction: column;
             }
 
             .btn {
                 width: 100%;
             }
+
+            .data-table {
+                font-size: 0.85em;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 10px 8px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Alert Message -->
+        <div id="alertBox" class="alert"></div>
+
         <!-- Step 1: Upload Excel -->
         <div class="step-card">
             <div class="step-header">
-                <div class="step-icon">📤</div>
-                <div class="step-title">ขั้นตอนที่ 1: อัพโหลดข้อมูลพนักงาน</div>
+                <span class="step-icon">📤</span>
+                <span class="step-title">ขั้นตอนที่ 1: อัพโหลดข้อมูลพนักงาน</span>
             </div>
-            <div class="upload-section">
-                <p style="margin-bottom: 15px; color: #666;"><strong>เลือกไฟล์ Excel ข้อมูลพนักงาน</strong></p>
-                <label for="excelFile" class="upload-label">
-                    📁 เลือกไฟล์ Excel
-                </label>
-                <input type="file" id="excelFile" accept=".xlsx,.xls">
-                <div id="fileInfo" class="file-info"></div>
+            <div class="upload-info">
+                <strong>เลือกไฟล์ Excel ข้อมูลพนักงาน</strong>
             </div>
-            <div class="button-group">
-                <button class="btn btn-debug" onclick="showDebugData()">
+            <label for="excelFile" class="upload-label">
+                📁 เลือกไฟล์ Excel
+            </label>
+            <input type="file" id="excelFile" accept=".xlsx,.xls">
+            <div id="fileNameDisplay" style="color: #5a67d8; font-weight: 500; margin-top: 10px; font-size: 0.9em;"></div>
+
+            <div class="button-row">
+                <button class="btn btn-warning" onclick="showDebugInfo()">
                     🔍 แสดงข้อมูล Debug
                 </button>
-                <button class="btn btn-clear-data" onclick="clearAllData()">
+                <button class="btn btn-primary" onclick="clearAllDatabase()">
                     🗑️ ล้างข้อมูลทั้งหมด
                 </button>
             </div>
         </div>
 
-        <!-- Step 2: Scan/Input Form -->
+        <!-- Step 2: Input Form -->
         <div class="step-card" id="step2" style="display: none;">
             <div class="step-header">
-                <div class="step-icon">✏️</div>
-                <div class="step-title">ขั้นตอนที่ 2: ป้อนหรือแสกนข้อมูล</div>
+                <span class="step-icon">📝</span>
+                <span class="step-title">ขั้นตอนที่ 2: ป้อนหรือแสกนข้อมูล</span>
             </div>
-            <div class="form-section">
-                <div class="form-group">
-                    <label class="form-label">ชื่อของรายงาน <span class="required">*</span></label>
-                    <input type="text" class="form-input" id="reportName" placeholder="เช่น รายงานพนักงานเข้างาน">
-                </div>
 
-                <div class="form-group">
-                    <label class="form-label">จำนวนของรายงาน <span class="required">*</span></label>
-                    <input type="number" class="form-input" id="reportCount" value="1" min="1">
-                </div>
+            <div class="form-row">
+                <label class="form-label">ชื่อของรายงาน <span class="required">*</span></label>
+                <input type="text" class="form-input" id="reportName" placeholder="เช่น รายงานพนักงานเข้างาน">
+            </div>
 
-                <div class="form-group">
-                    <label class="form-label">Emp-ID <span class="required">*</span></label>
-                    <input type="text" class="form-input" id="scanInput" placeholder="หมายเลขพนักงาน เช่น 7126911">
-                </div>
+            <div class="form-row">
+                <label class="form-label">จำนวนของรายงาน <span class="required">*</span></label>
+                <input type="number" class="form-input" id="reportCount" value="1" min="1">
+            </div>
 
-                <div class="form-group">
-                    <label class="form-label">Function (แสดงอัตโนมัติ)</label>
-                    <input type="text" class="form-input" id="functionDisplay" placeholder="แสดงผลฟังก์ชันอัตโนมัติจาก Emp-ID" readonly>
-                </div>
+            <div class="form-row">
+                <label class="form-label">Emp-ID <span class="required">*</span></label>
+                <input type="text" class="form-input" id="empIdInput" placeholder="หมายเลขพนักงาน เช่น 7126911">
+            </div>
 
-                <div class="form-group">
-                    <label class="form-label">Name (แสดงอัตโนมัติ)</label>
-                    <input type="text" class="form-input" id="nameDisplay" placeholder="แสดงผลชื่ออัตโนมัติจาก Emp-ID" readonly>
-                </div>
+            <div class="form-row">
+                <label class="form-label">Function (แสดงอัตโนมัติ)</label>
+                <input type="text" class="form-input" id="functionField" placeholder="แสดงผลฟังก์ชันอัตโนมัติจาก Emp-ID" readonly>
+            </div>
 
-                <div class="form-buttons">
-                    <button class="btn btn-submit" onclick="submitData()">
-                        ✅ บันทึกข้อมูล
-                    </button>
-                    <button class="btn btn-clear" onclick="clearForm()">
-                        🔄 ล้างฟอร์ม
-                    </button>
-                </div>
+            <div class="form-row">
+                <label class="form-label">Name (แสดงอัตโนมัติ)</label>
+                <input type="text" class="form-input" id="nameField" placeholder="แสดงผลชื่ออัตโนมัติจาก Emp-ID" readonly>
+            </div>
+
+            <div class="form-buttons">
+                <button class="btn btn-success" onclick="saveRecord()">
+                    ✅ บันทึกข้อมูล
+                </button>
+                <button class="btn btn-secondary" onclick="resetForm()">
+                    🔄 ล้างฟอร์ม
+                </button>
             </div>
         </div>
-
-        <!-- Status Message -->
-        <div id="statusMessage" style="display: none;"></div>
 
         <!-- Step 3: Summary Table -->
         <div class="step-card" id="step3" style="display: none;">
             <div class="step-header">
-                <div class="step-icon">📊</div>
-                <div class="step-title">ขั้นตอนที่ 3: รายการบันทึก</div>
+                <span class="step-icon">📊</span>
+                <span class="step-title">ขั้นตอนที่ 3: รายการบันทึก</span>
             </div>
 
             <div class="summary-stats">
                 <div class="stat-box">
-                    <div class="stat-number" id="totalRecords">0</div>
+                    <div class="stat-number" id="totalCount">0</div>
                     <div class="stat-label">จำนวนรายการทั้งหมด</div>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-number" id="uniqueEmployees">0</div>
+                    <div class="stat-number" id="uniqueCount">0</div>
                     <div class="stat-label">จำนวนพนักงานที่ไม่ซ้ำ</div>
                 </div>
             </div>
 
-            <div class="table-container">
+            <div class="table-wrapper">
                 <table class="data-table">
                     <thead>
                         <tr>
@@ -457,7 +487,7 @@
                             <th>จัดการ</th>
                         </tr>
                     </thead>
-                    <tbody id="dataTableBody">
+                    <tbody id="tableBody">
                         <tr>
                             <td colspan="8" class="no-data">ยังไม่มีข้อมูล กรุณาบันทึกข้อมูลจากฟอร์มด้านบน</td>
                         </tr>
@@ -465,11 +495,11 @@
                 </table>
             </div>
 
-            <div class="export-buttons">
-                <button class="btn btn-export" onclick="exportToExcel()">
+            <div class="export-section">
+                <button class="btn btn-export" onclick="exportExcel()">
                     📥 Export ไฟล์ Excel
                 </button>
-                <button class="btn btn-clear-list" onclick="clearRecords()">
+                <button class="btn btn-clear" onclick="clearAllRecords()">
                     🗑️ ล้างรายการบันทึก
                 </button>
             </div>
@@ -477,50 +507,50 @@
     </div>
 
     <script>
-        let masterData = [];
-        let recordedData = [];
+        let masterDatabase = [];
+        let recordsList = [];
 
-        // Load saved data
+        // Load on page load
         window.onload = function() {
-            loadSavedData();
+            loadFromStorage();
         };
 
-        function loadSavedData() {
-            const saved = localStorage.getItem('employeeDatabase');
-            if (saved) {
-                masterData = JSON.parse(saved);
-                showStep2();
-                showStatus('✅ โหลดข้อมูลที่บันทึกไว้สำเร็จ (' + masterData.length + ' รายการ)', 'success');
+        function loadFromStorage() {
+            const savedMaster = localStorage.getItem('masterDatabase');
+            if (savedMaster) {
+                masterDatabase = JSON.parse(savedMaster);
+                document.getElementById('step2').style.display = 'block';
+                showAlert('✅ โหลดข้อมูลที่บันทึกไว้สำเร็จ (' + masterDatabase.length + ' รายการ)', 'success');
             }
 
-            const savedRecords = localStorage.getItem('recordedData');
+            const savedRecords = localStorage.getItem('recordsList');
             if (savedRecords) {
-                recordedData = JSON.parse(savedRecords);
-                displayRecords();
+                recordsList = JSON.parse(savedRecords);
+                updateTable();
             }
         }
 
-        // Upload Excel
+        // Upload Excel Handler
         document.getElementById('excelFile').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
 
-            document.getElementById('fileInfo').textContent = `📄 ${file.name}`;
+            document.getElementById('fileNameDisplay').textContent = '📄 ' + file.name;
 
             const reader = new FileReader();
             reader.onload = function(event) {
                 try {
                     const data = new Uint8Array(event.target.result);
                     const workbook = XLSX.read(data, {type: 'array'});
-                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, {header: 1, raw: false});
+                    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(sheet, {header: 1, raw: false});
 
-                    masterData = [];
+                    masterDatabase = [];
                     for (let i = 1; i < jsonData.length; i++) {
                         const row = jsonData[i];
-                        if (row[1]) { // Check if Employee ID exists
-                            masterData.push({
-                                employeeId: String(row[1] || '').trim(),
+                        if (row[1]) {
+                            masterDatabase.push({
+                                empId: String(row[1] || '').trim(),
                                 badId: String(row[2] || '').trim(),
                                 name: String(row[3] || '').trim(),
                                 batch: String(row[4] || '').trim(),
@@ -533,69 +563,82 @@
                         }
                     }
 
-                    localStorage.setItem('employeeDatabase', JSON.stringify(masterData));
-                    showStatus(`✅ อัพโหลดสำเร็จ! พบข้อมูล ${masterData.length} รายการ`, 'success');
-                    showStep2();
-                    document.getElementById('scanInput').focus();
+                    localStorage.setItem('masterDatabase', JSON.stringify(masterDatabase));
+                    document.getElementById('step2').style.display = 'block';
+                    showAlert('✅ อัพโหลดสำเร็จ! พบข้อมูล ' + masterDatabase.length + ' รายการ', 'success');
+                    document.getElementById('empIdInput').focus();
 
                 } catch (error) {
-                    showStatus('❌ เกิดข้อผิดพลาดในการอ่านไฟล์: ' + error.message, 'error');
+                    showAlert('❌ เกิดข้อผิดพลาด: ' + error.message, 'error');
                 }
             };
             reader.readAsArrayBuffer(file);
         });
 
-        // Auto-fill when typing Emp-ID
-        document.getElementById('scanInput').addEventListener('input', function() {
+        // Auto-fill on Emp-ID input
+        document.getElementById('empIdInput').addEventListener('input', function() {
             const empId = this.value.trim();
             if (empId) {
-                const found = masterData.find(emp => emp.employeeId === empId || emp.badId === empId);
-                if (found) {
-                    document.getElementById('functionDisplay').value = found.position || '-';
-                    document.getElementById('nameDisplay').value = found.name || '-';
+                const employee = masterDatabase.find(emp => 
+                    emp.empId === empId || emp.badId === empId
+                );
+                
+                if (employee) {
+                    document.getElementById('functionField').value = employee.position || '-';
+                    document.getElementById('nameField').value = employee.name || '-';
                 } else {
-                    document.getElementById('functionDisplay').value = '';
-                    document.getElementById('nameDisplay').value = '';
+                    document.getElementById('functionField').value = '';
+                    document.getElementById('nameField').value = '';
                 }
+            } else {
+                document.getElementById('functionField').value = '';
+                document.getElementById('nameField').value = '';
             }
         });
 
-        // Submit Data
-        function submitData() {
+        // Save Record
+        function saveRecord() {
             const reportName = document.getElementById('reportName').value.trim();
             const reportCount = document.getElementById('reportCount').value.trim();
-            const empId = document.getElementById('scanInput').value.trim();
-            const functionVal = document.getElementById('functionDisplay').value.trim();
-            const nameVal = document.getElementById('nameDisplay').value.trim();
+            const empId = document.getElementById('empIdInput').value.trim();
+            const functionVal = document.getElementById('functionField').value.trim();
+            const nameVal = document.getElementById('nameField').value.trim();
 
             if (!reportName || !reportCount || !empId) {
-                showStatus('❌ กรุณากรอกข้อมูลที่จำเป็น (ชื่อรายงาน, จำนวน, Emp-ID)', 'error');
+                showAlert('❌ กรุณากรอกข้อมูลที่จำเป็น (ชื่อรายงาน, จำนวน, Emp-ID)', 'error');
                 return;
             }
 
             const record = {
+                id: Date.now(),
                 reportName: reportName,
                 reportCount: reportCount,
                 empId: empId,
                 function: functionVal,
                 name: nameVal,
-                date: new Date().toLocaleString('th-TH')
+                timestamp: new Date().toLocaleString('th-TH', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
             };
 
-            recordedData.push(record);
-            localStorage.setItem('recordedData', JSON.stringify(recordedData));
+            recordsList.push(record);
+            localStorage.setItem('recordsList', JSON.stringify(recordsList));
             
-            displayRecords();
-            clearForm();
-            showStatus('✅ บันทึกข้อมูลสำเร็จ', 'success');
-            document.getElementById('scanInput').focus();
+            updateTable();
+            resetForm();
+            showAlert('✅ บันทึกข้อมูลสำเร็จ', 'success');
+            document.getElementById('empIdInput').focus();
         }
 
-        // Display Records
-        function displayRecords() {
-            const tbody = document.getElementById('dataTableBody');
+        // Update Table Display
+        function updateTable() {
+            const tbody = document.getElementById('tableBody');
             
-            if (recordedData.length === 0) {
+            if (recordsList.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="8" class="no-data">ยังไม่มีข้อมูล กรุณาบันทึกข้อมูลจากฟอร์มด้านบน</td></tr>';
                 document.getElementById('step3').style.display = 'none';
                 return;
@@ -604,8 +647,8 @@
             document.getElementById('step3').style.display = 'block';
             tbody.innerHTML = '';
 
-            recordedData.forEach((record, index) => {
-                const row = document.createElement('tr');
+            recordsList.forEach((record, index) => {
+                const row = tbody.insertRow();
                 row.innerHTML = `
                     <td>${index + 1}</td>
                     <td>${record.reportName}</td>
@@ -613,141 +656,138 @@
                     <td>${record.empId}</td>
                     <td>${record.function || '-'}</td>
                     <td>${record.name || '-'}</td>
-                    <td>${record.date}</td>
+                    <td>${record.timestamp}</td>
                     <td>
-                        <button class="action-btn btn-edit" onclick="editRecord(${index})">✏️ แก้ไข</button>
-                        <button class="action-btn btn-delete" onclick="deleteRecord(${index})">🗑️ ลบ</button>
+                        <div class="action-cell">
+                            <button class="action-btn btn-edit" onclick="editRecord(${record.id})">✏️ แก้ไข</button>
+                            <button class="action-btn btn-delete" onclick="deleteRecord(${record.id})">🗑️ ลบ</button>
+                        </div>
                     </td>
                 `;
-                tbody.appendChild(row);
             });
 
             // Update stats
-            document.getElementById('totalRecords').textContent = recordedData.length;
-            const uniqueEmps = new Set(recordedData.map(r => r.empId));
-            document.getElementById('uniqueEmployees').textContent = uniqueEmps.size;
+            document.getElementById('totalCount').textContent = recordsList.length;
+            const uniqueEmps = new Set(recordsList.map(r => r.empId));
+            document.getElementById('uniqueCount').textContent = uniqueEmps.size;
         }
 
         // Edit Record
-        function editRecord(index) {
-            const record = recordedData[index];
+        function editRecord(id) {
+            const record = recordsList.find(r => r.id === id);
+            if (!record) return;
+
             document.getElementById('reportName').value = record.reportName;
             document.getElementById('reportCount').value = record.reportCount;
-            document.getElementById('scanInput').value = record.empId;
-            document.getElementById('functionDisplay').value = record.function;
-            document.getElementById('nameDisplay').value = record.name;
+            document.getElementById('empIdInput').value = record.empId;
+            document.getElementById('functionField').value = record.function;
+            document.getElementById('nameField').value = record.name;
 
-            recordedData.splice(index, 1);
-            localStorage.setItem('recordedData', JSON.stringify(recordedData));
-            displayRecords();
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            showStatus('ℹ️ กรุณาแก้ไขข้อมูลและกดบันทึกอีกครั้ง', 'info');
+            recordsList = recordsList.filter(r => r.id !== id);
+            localStorage.setItem('recordsList', JSON.stringify(recordsList));
+            updateTable();
+
+            window.scrollTo({top: 0, behavior: 'smooth'});
+            showAlert('ℹ️ กรุณาแก้ไขข้อมูลและกดบันทึกอีกครั้ง', 'info');
         }
 
         // Delete Record
-        function deleteRecord(index) {
+        function deleteRecord(id) {
             if (confirm('ต้องการลบรายการนี้หรือไม่?')) {
-                recordedData.splice(index, 1);
-                localStorage.setItem('recordedData', JSON.stringify(recordedData));
-                displayRecords();
-                showStatus('✅ ลบข้อมูลสำเร็จ', 'success');
+                recordsList = recordsList.filter(r => r.id !== id);
+                localStorage.setItem('recordsList', JSON.stringify(recordsList));
+                updateTable();
+                showAlert('✅ ลบข้อมูลสำเร็จ', 'success');
             }
         }
 
-        // Clear Form
-        function clearForm() {
-            document.getElementById('scanInput').value = '';
-            document.getElementById('functionDisplay').value = '';
-            document.getElementById('nameDisplay').value = '';
-            document.getElementById('scanInput').focus();
+        // Reset Form
+        function resetForm() {
+            document.getElementById('empIdInput').value = '';
+            document.getElementById('functionField').value = '';
+            document.getElementById('nameField').value = '';
+            document.getElementById('empIdInput').focus();
         }
 
-        // Clear Records
-        function clearRecords() {
+        // Clear All Records
+        function clearAllRecords() {
             if (confirm('ต้องการล้างรายการบันทึกทั้งหมดหรือไม่?')) {
-                recordedData = [];
-                localStorage.removeItem('recordedData');
-                displayRecords();
-                showStatus('✅ ล้างรายการบันทึกสำเร็จ', 'success');
+                recordsList = [];
+                localStorage.removeItem('recordsList');
+                updateTable();
+                showAlert('✅ ล้างรายการบันทึกสำเร็จ', 'success');
             }
         }
 
-        // Clear All Data
-        function clearAllData() {
+        // Clear All Database
+        function clearAllDatabase() {
             if (confirm('ต้องการล้างข้อมูลทั้งหมด (รวมไฟล์ Excel และรายการบันทึก) หรือไม่?')) {
-                masterData = [];
-                recordedData = [];
-                localStorage.removeItem('employeeDatabase');
-                localStorage.removeItem('recordedData');
-                document.getElementById('fileInfo').textContent = '';
+                masterDatabase = [];
+                recordsList = [];
+                localStorage.clear();
+                document.getElementById('fileNameDisplay').textContent = '';
                 document.getElementById('step2').style.display = 'none';
-                displayRecords();
-                showStatus('✅ ล้างข้อมูลทั้งหมดสำเร็จ', 'success');
+                updateTable();
+                showAlert('✅ ล้างข้อมูลทั้งหมดสำเร็จ', 'success');
             }
         }
 
-        // Export to Excel
-        function exportToExcel() {
-            if (recordedData.length === 0) {
-                showStatus('⚠️ ไม่มีข้อมูลให้ Export', 'error');
+        // Show Debug Info
+        function showDebugInfo() {
+            if (masterDatabase.length === 0) {
+                alert('ยังไม่มีข้อมูลในระบบ\nกรุณา Upload ไฟล์ Excel ก่อน');
                 return;
             }
 
-            const exportData = recordedData.map((record, index) => ({
-                'ลำดับ': index + 1,
-                'ชื่อรายงาน': record.reportName,
-                'จำนวน': record.reportCount,
-                'Emp-ID': record.empId,
-                'Function': record.function,
-                'Name': record.name,
-                'วันที่บันทึก': record.date
+            const samples = masterDatabase.slice(0, 5);
+            let msg = `📊 ข้อมูลในฐานข้อมูล: ${masterDatabase.length} รายการ\n\n`;
+            msg += '🔍 ตัวอย่าง 5 รายการแรก:\n\n';
+            
+            samples.forEach((emp, i) => {
+                msg += `${i + 1}. Emp-ID: ${emp.empId}\n`;
+                msg += `   ชื่อ: ${emp.name}\n`;
+                msg += `   ตำแหน่ง: ${emp.position}\n\n`;
+            });
+
+            alert(msg);
+        }
+
+        // Export to Excel
+        function exportExcel() {
+            if (recordsList.length === 0) {
+                showAlert('⚠️ ไม่มีข้อมูลให้ Export', 'error');
+                return;
+            }
+
+            const exportData = recordsList.map((rec, idx) => ({
+                'ลำดับ': idx + 1,
+                'ชื่อรายงาน': rec.reportName,
+                'จำนวน': rec.reportCount,
+                'Emp-ID': rec.empId,
+                'Function': rec.function,
+                'Name': rec.name,
+                'วันที่บันทึก': rec.timestamp
             }));
 
             const ws = XLSX.utils.json_to_sheet(exportData);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, 'รายการบันทึก');
 
-            const date = new Date().toISOString().split('T')[0];
-            XLSX.writeFile(wb, `รายการบันทึก_${date}.xlsx`);
+            const filename = `รายการบันทึก_${new Date().toISOString().split('T')[0]}.xlsx`;
+            XLSX.writeFile(wb, filename);
 
-            showStatus('✅ Export ข้อมูลสำเร็จ', 'success');
+            showAlert('✅ Export ข้อมูลสำเร็จ', 'success');
         }
 
-        // Show Debug Data
-        function showDebugData() {
-            if (masterData.length === 0) {
-                alert('ยังไม่มีข้อมูลในระบบ กรุณา Upload ไฟล์ Excel ก่อน');
-                return;
-            }
-
-            const sample = masterData.slice(0, 5);
-            let message = `📊 ข้อมูลในระบบ: ${masterData.length} รายการ\n\n`;
-            message += '🔍 ตัวอย่าง 5 รายการแรก:\n\n';
-            
-            sample.forEach((emp, i) => {
-                message += `${i + 1}. Emp-ID: ${emp.employeeId}\n`;
-                message += `   ชื่อ: ${emp.name}\n`;
-                message += `   ตำแหน่ง: ${emp.position}\n\n`;
-            });
-
-            alert(message);
-        }
-
-        // Show Step 2
-        function showStep2() {
-            document.getElementById('step2').style.display = 'block';
-        }
-
-        // Show Status Message
-        function showStatus(message, type) {
-            const statusEl = document.getElementById('statusMessage');
-            statusEl.textContent = message;
-            statusEl.className = `status-message status-${type}`;
-            statusEl.style.display = 'block';
+        // Show Alert Message
+        function showAlert(message, type) {
+            const alert = document.getElementById('alertBox');
+            alert.textContent = message;
+            alert.className = `alert alert-${type}`;
+            alert.style.display = 'block';
 
             setTimeout(() => {
-                statusEl.style.display = 'none';
+                alert.style.display = 'none';
             }, 4000);
         }
     </script>
