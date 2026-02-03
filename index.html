@@ -222,6 +222,16 @@
             border: 2px solid #667eea;
         }
 
+        .debug-info {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
         /* Manual Input Form */
         .manual-form {
             background: #fff3e0;
@@ -535,6 +545,7 @@
         </div>
 
         <div id="statusMessage" class="status" style="display: none;"></div>
+        <div id="debugInfo" class="debug-info" style="display: none;"></div>
 
         <!-- Manual Input Form -->
         <div class="manual-form" id="manualForm">
@@ -648,7 +659,7 @@
             if (saved) {
                 try {
                     masterData = JSON.parse(saved);
-                    showStatus('✅ โหลดฐานข้อมูลที่บันทึกไว้สำเร็จ', 'success');
+                    showStatus('✅ โหลดฐานข้อมูลที่บันทึกไว้สำเร็จ (' + masterData.length + ' รายการ)', 'success');
                     document.getElementById('scanInput').disabled = false;
                     enableButtons();
                     updateStats();
@@ -680,26 +691,33 @@
                     const data = new Uint8Array(event.target.result);
                     const workbook = XLSX.read(data, {type: 'array'});
                     const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, {header: 1});
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, {header: 1, raw: false});
+
+                    console.log('Raw Excel Data:', jsonData.slice(0, 5));
 
                     masterData = [];
                     for (let i = 1; i < jsonData.length; i++) {
                         const row = jsonData[i];
-                        if (row[2]) {
+                        if (row[2]) { // Check if Bad ID exists
+                            // Convert Bad ID to string and clean it
+                            let badId = String(row[2]).trim();
+                            
                             masterData.push({
                                 no: row[0],
-                                employeeId: row[1],
-                                badId: String(row[2]).trim(),
-                                name: row[3],
-                                batch: row[4],
-                                phone: row[5],
-                                dep: row[6],
-                                area: row[7],
-                                position: row[8],
-                                shift: row[9]
+                                employeeId: String(row[1] || '').trim(),
+                                badId: badId,
+                                name: String(row[3] || '').trim(),
+                                batch: String(row[4] || '').trim(),
+                                phone: String(row[5] || '').trim(),
+                                dep: String(row[6] || '').trim(),
+                                area: String(row[7] || '').trim(),
+                                position: String(row[8] || '').trim(),
+                                shift: String(row[9] || '').trim()
                             });
                         }
                     }
+
+                    console.log('Processed Master Data:', masterData.slice(0, 5));
 
                     showStatus(`✅ อัพโหลดสำเร็จ! พบข้อมูล ${masterData.length} รายการ`, 'success');
                     document.getElementById('scanInput').disabled = false;
@@ -707,8 +725,12 @@
                     enableButtons();
                     updateStats();
 
+                    // Show debug info
+                    showDebugInfo(`ตัวอย่าง Bad ID ในระบบ: ${masterData.slice(0, 5).map(e => e.badId).join(', ')}`);
+
                 } catch (error) {
                     showStatus('❌ เกิดข้อผิดพลาดในการอ่านไฟล์: ' + error.message, 'error');
+                    console.error('Error:', error);
                 }
             };
             reader.readAsArrayBuffer(file);
@@ -719,9 +741,16 @@
                 const scannedId = this.value.trim();
                 if (!scannedId) return;
 
+                console.log('Scanning for Bad ID:', scannedId);
+                console.log('Available Bad IDs:', masterData.map(e => e.badId));
+
+                // Search in master data
                 const found = masterData.find(emp => emp.badId === scannedId);
 
+                console.log('Found employee:', found);
+
                 if (found) {
+                    // Check if already scanned
                     const alreadyScanned = scannedData.find(emp => emp.badId === scannedId);
                     if (alreadyScanned) {
                         showStatus('⚠️ หมายเลขนี้ถูกแสกนแล้ว!', 'error');
@@ -734,6 +763,7 @@
                     }
                 } else {
                     showStatus('❌ ไม่พบข้อมูล Bad ID: ' + scannedId, 'error');
+                    showDebugInfo(`ค้นหา: "${scannedId}" | ตัวอย่าง Bad ID ที่มี: ${masterData.slice(0, 5).map(e => e.badId).join(', ')}`);
                 }
 
                 this.value = '';
@@ -927,7 +957,7 @@
             }
 
             localStorage.setItem('employeeDatabase', JSON.stringify(masterData));
-            showStatus('✅ บันทึกฐานข้อมูลสำเร็จ', 'success');
+            showStatus('✅ บันทึกฐานข้อมูลสำเร็จ (' + masterData.length + ' รายการ)', 'success');
         }
 
         function saveScannedData() {
@@ -994,7 +1024,17 @@
 
             setTimeout(() => {
                 statusEl.style.display = 'none';
-            }, 3000);
+            }, 4000);
+        }
+
+        function showDebugInfo(message) {
+            const debugEl = document.getElementById('debugInfo');
+            debugEl.textContent = '🔍 Debug: ' + message;
+            debugEl.style.display = 'block';
+
+            setTimeout(() => {
+                debugEl.style.display = 'none';
+            }, 10000);
         }
 
         function enableButtons() {
