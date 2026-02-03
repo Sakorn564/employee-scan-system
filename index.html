@@ -228,7 +228,6 @@
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
         }
 
-        /* Pagination */
         .pagination {
             display: flex;
             justify-content: center;
@@ -750,6 +749,7 @@
             height: 100%;
             background-color: rgba(0,0,0,0.5);
             animation: fadeIn 0.3s ease-out;
+            overflow-y: auto;
         }
 
         @keyframes fadeIn {
@@ -761,14 +761,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
 
         .modal-content {
             background: white;
             padding: 30px;
             border-radius: 15px;
-            max-width: 500px;
-            width: 90%;
+            max-width: 900px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
             box-shadow: 0 10px 50px rgba(0,0,0,0.3);
             animation: slideUp 0.3s ease-out;
         }
@@ -851,6 +854,191 @@
             flex: 1;
         }
 
+        /* Template Mapping Styles */
+        .template-info {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .template-info h4 {
+            color: #1976d2;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .template-info p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .required-fields {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .required-fields h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .required-fields ul {
+            margin-left: 20px;
+            color: #856404;
+        }
+
+        .required-fields li {
+            margin-bottom: 5px;
+        }
+
+        .mapping-container {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .mapping-row {
+            display: grid;
+            grid-template-columns: 200px 1fr 120px;
+            gap: 15px;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .mapping-row:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .mapping-row.required {
+            border-left: 5px solid #ff6b6b;
+        }
+
+        .mapping-label {
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mapping-label .required-mark {
+            color: #ff6b6b;
+            font-size: 1.2em;
+        }
+
+        .mapping-select {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Kanit', sans-serif;
+            font-size: 1em;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .mapping-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .mapping-preview {
+            font-size: 0.9em;
+            color: #666;
+            background: white;
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .preview-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .preview-section h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .preview-table {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .preview-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+
+        .preview-table th {
+            background: #667eea;
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .preview-table td {
+            background: white;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .saved-templates {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .saved-templates h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .template-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .template-item:hover {
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .template-item.active {
+            border-color: #38ef7d;
+            background: #f0fff4;
+        }
+
+        .template-name {
+            font-weight: bold;
+            color: #333;
+        }
+
         .debug-box {
             background: #fff3cd;
             border: 2px solid #ffc107;
@@ -928,6 +1116,14 @@
 
             .pagination {
                 flex-direction: column;
+            }
+
+            .mapping-row {
+                grid-template-columns: 1fr;
+            }
+
+            .mapping-preview {
+                text-align: left;
             }
         }
     </style>
@@ -1009,7 +1205,8 @@
                     <h3>คลิกเพื่ออัปโหลดไฟล์ Excel</h3>
                     <p>
                         รองรับไฟล์ .xlsx และ .xls<br>
-                        <strong>รองรับข้อมูลได้ไม่จำกัด (ทดสอบแล้ว 300+ แถว)</strong>
+                        <strong>รองรับข้อมูลได้ไม่จำกัด (ทดสอบแล้ว 300+ แถว)</strong><br>
+                        <em style="color: #2196f3;">💡 ระบบจะแนะนำให้ระบุหัวข้อคอลัมน์เพื่อความถูกต้อง</em>
                     </p>
                     <input type="file" id="fileInput" accept=".xlsx,.xls">
                 </div>
@@ -1122,6 +1319,62 @@
         </div>
     </div>
 
+    <!-- Template Mapping Modal -->
+    <div class="modal" id="templateMappingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon">📋</div>
+                <h3>ระบุหัวข้อคอลัมน์ Excel</h3>
+            </div>
+            
+            <div class="modal-body">
+                <div class="template-info">
+                    <h4>📌 คำแนะนำ</h4>
+                    <p>กรุณาระบุว่าแต่ละคอลัมน์ในไฟล์ Excel ของคุณตรงกับข้อมูลใด</p>
+                    <p>ระบบจะพยายามตรวจจับอัตโนมัติ แต่คุณสามารถปรับแก้ได้</p>
+                </div>
+
+                <div class="required-fields">
+                    <h4>⚠️ ข้อมูลที่จำเป็นต้องมี</h4>
+                    <ul>
+                        <li><strong>รหัสพนักงาน</strong> - ต้องระบุ (สำหรับค้นหาข้อมูล)</li>
+                        <li><strong>ชื่อ นามสกุล</strong> - ต้องระบุ (สำหรับแสดงผล)</li>
+                    </ul>
+                </div>
+
+                <!-- Saved Templates -->
+                <div class="saved-templates" id="savedTemplatesContainer" style="display: none;">
+                    <h4>💾 Template ที่บันทึกไว้</h4>
+                    <div id="savedTemplatesList"></div>
+                </div>
+
+                <div class="mapping-container" id="mappingContainer">
+                    <!-- Mapping rows will be generated here -->
+                </div>
+
+                <!-- Preview Section -->
+                <div class="preview-section" id="previewSection" style="display: none;">
+                    <h4>👁️ ตัวอย่างข้อมูล (3 แถวแรก)</h4>
+                    <div class="preview-table">
+                        <table id="previewTable"></table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeTemplateMappingModal()" style="width: auto;">
+                    ✕ ยกเลิก
+                </button>
+                <button class="btn btn-info" onclick="saveTemplate()" style="width: auto;">
+                    💾 บันทึก Template
+                </button>
+                <button class="btn btn-success" onclick="confirmMapping()" style="width: auto;">
+                    ✅ ยืนยันและโหลดข้อมูล
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Clear Data Modal -->
     <div class="modal" id="clearDataModal">
         <div class="modal-content">
@@ -1181,6 +1434,26 @@
         let currentPage = 1;
         const itemsPerPage = 10;
 
+        // Template Mapping Variables
+        let excelData = null;
+        let excelHeaders = [];
+        let columnMapping = {};
+        let savedTemplates = [];
+
+        // Field Definitions
+        const fieldDefinitions = [
+            { key: 'no', label: 'No.', required: false, icon: '🔢' },
+            { key: 'empId', label: 'รหัสพนักงาน', required: true, icon: '🆔' },
+            { key: 'badId', label: 'Bad ID', required: false, icon: '💳' },
+            { key: 'name', label: 'ชื่อ นามสกุล', required: true, icon: '👤' },
+            { key: 'batch', label: 'รุ่นที่เข้างาน', required: false, icon: '📅' },
+            { key: 'phone', label: 'เบอร์โทรศัพท์', required: false, icon: '📱' },
+            { key: 'dep', label: 'Dep.', required: false, icon: '🏢' },
+            { key: 'area', label: 'Area', required: false, icon: '📍' },
+            { key: 'position', label: 'ตำแหน่งงาน', required: false, icon: '💼' },
+            { key: 'shift', label: 'กะการทำงาน', required: false, icon: '⏰' }
+        ];
+
         // Sample Data
         const sampleData = [
             { empId: '1000333210', name: 'สกัญญา ศรีประไหม', badId: '1000333210', batch: 'รุ่น 10', phone: '0803917333', dep: 'HDA', area: 'Cleaning', position: 'PART RECEIVING', shift: 'D / E' },
@@ -1192,6 +1465,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadFromLocalStorage();
             loadSavedDatabases();
+            loadSavedTemplates();
             updateStats();
             updateSavedDatabasesList();
             updateEmployeeCards();
@@ -1222,16 +1496,340 @@
             });
         });
 
+        // Template Functions
+        function loadSavedTemplates() {
+            const saved = localStorage.getItem('savedTemplates');
+            if (saved) {
+                savedTemplates = JSON.parse(saved);
+            }
+        }
+
+        function saveTemplate() {
+            const templateName = prompt('กรุณาตั้งชื่อ Template:', 'Template ' + new Date().toLocaleDateString('th-TH'));
+            if (!templateName) return;
+
+            const template = {
+                id: Date.now().toString(),
+                name: templateName,
+                mapping: {...columnMapping},
+                savedDate: new Date().toLocaleString('th-TH')
+            };
+
+            const existingIndex = savedTemplates.findIndex(t => t.name === templateName);
+            if (existingIndex >= 0) {
+                if (confirm('ชื่อนี้มีอยู่แล้ว ต้องการเขียนทับหรือไม่?')) {
+                    savedTemplates[existingIndex] = template;
+                } else {
+                    return;
+                }
+            } else {
+                savedTemplates.push(template);
+            }
+
+            localStorage.setItem('savedTemplates', JSON.stringify(savedTemplates));
+            showNotification('✅ บันทึก Template สำเร็จ!', 'success');
+            updateSavedTemplatesList();
+        }
+
+        function loadTemplate(templateId) {
+            const template = savedTemplates.find(t => t.id === templateId);
+            if (!template) return;
+
+            columnMapping = {...template.mapping};
+            generateMappingUI();
+            generatePreview();
+            showNotification('✅ โหลด Template สำเร็จ!', 'success');
+        }
+
+        function deleteTemplate(templateId) {
+            const template = savedTemplates.find(t => t.id === templateId);
+            if (!template) return;
+
+            if (!confirm(`ต้องการลบ Template "${template.name}" หรือไม่?`)) return;
+
+            savedTemplates = savedTemplates.filter(t => t.id !== templateId);
+            localStorage.setItem('savedTemplates', JSON.stringify(savedTemplates));
+            updateSavedTemplatesList();
+            showNotification('✅ ลบ Template สำเร็จ!', 'success');
+        }
+
+        function updateSavedTemplatesList() {
+            const container = document.getElementById('savedTemplatesContainer');
+            const listDiv = document.getElementById('savedTemplatesList');
+
+            if (savedTemplates.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'block';
+            listDiv.innerHTML = savedTemplates.map(template => `
+                <div class="template-item">
+                    <div>
+                        <div class="template-name">${template.name}</div>
+                        <div style="font-size: 0.85em; color: #666;">${template.savedDate}</div>
+                    </div>
+                    <div class="database-actions">
+                        <button class="btn-small btn-load" onclick="loadTemplate('${template.id}')">โหลด</button>
+                        <button class="btn-small btn-delete" onclick="deleteTemplate('${template.id}')">ลบ</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function autoDetectMapping(headers) {
+            const mapping = {};
+            
+            // Keywords for auto-detection
+            const keywords = {
+                no: ['no', 'ลำดับ', 'เลขที่'],
+                empId: ['รหัสพนักงาน', 'รหัส', 'emp', 'employee', 'id'],
+                badId: ['bad', 'badge', 'บัตร'],
+                name: ['ชื่อ', 'name', 'นามสกุล', 'ชื่อนามสกุล'],
+                batch: ['รุ่น', 'batch', 'เข้างาน'],
+                phone: ['เบอร์', 'โทร', 'phone', 'tel', 'เบอร์โทร'],
+                dep: ['dep', 'department', 'แผนก'],
+                area: ['area', 'พื้นที่', 'เขต'],
+                position: ['ตำแหน่ง', 'position', 'หน้าที่'],
+                shift: ['กะ', 'shift', 'ช่วงเวลา']
+            };
+
+            headers.forEach((header, index) => {
+                const headerLower = header.toLowerCase().trim();
+                
+                for (const [field, keywordList] of Object.entries(keywords)) {
+                    if (keywordList.some(keyword => headerLower.includes(keyword.toLowerCase()))) {
+                        if (!mapping[field]) { // Only assign if not already mapped
+                            mapping[field] = index;
+                        }
+                    }
+                }
+            });
+
+            return mapping;
+        }
+
+        function generateMappingUI() {
+            const container = document.getElementById('mappingContainer');
+            
+            container.innerHTML = fieldDefinitions.map(field => {
+                const currentMapping = columnMapping[field.key];
+                const previewValue = currentMapping !== undefined && excelData[1] 
+                    ? excelData[1][currentMapping] || '-' 
+                    : '-';
+
+                return `
+                    <div class="mapping-row ${field.required ? 'required' : ''}">
+                        <div class="mapping-label">
+                            ${field.icon} ${field.label}
+                            ${field.required ? '<span class="required-mark">*</span>' : ''}
+                        </div>
+                        <select class="mapping-select" onchange="updateMapping('${field.key}', this.value)">
+                            <option value="">-- ไม่ระบุ --</option>
+                            ${excelHeaders.map((header, index) => `
+                                <option value="${index}" ${currentMapping === index ? 'selected' : ''}>
+                                    ${header}
+                                </option>
+                            `).join('')}
+                        </select>
+                        <div class="mapping-preview">${previewValue}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateMapping(fieldKey, columnIndex) {
+            if (columnIndex === '') {
+                delete columnMapping[fieldKey];
+            } else {
+                columnMapping[fieldKey] = parseInt(columnIndex);
+            }
+            generateMappingUI();
+            generatePreview();
+        }
+
+        function generatePreview() {
+            const previewSection = document.getElementById('previewSection');
+            const previewTable = document.getElementById('previewTable');
+
+            if (Object.keys(columnMapping).length === 0) {
+                previewSection.style.display = 'none';
+                return;
+            }
+
+            previewSection.style.display = 'block';
+
+            // Create preview header
+            let html = '<thead><tr>';
+            fieldDefinitions.forEach(field => {
+                if (columnMapping[field.key] !== undefined) {
+                    html += `<th>${field.icon} ${field.label}</th>`;
+                }
+            });
+            html += '</tr></thead><tbody>';
+
+            // Create preview rows (first 3 data rows)
+            for (let i = 1; i <= Math.min(3, excelData.length - 1); i++) {
+                html += '<tr>';
+                fieldDefinitions.forEach(field => {
+                    if (columnMapping[field.key] !== undefined) {
+                        const value = excelData[i][columnMapping[field.key]] || '-';
+                        html += `<td>${value}</td>`;
+                    }
+                });
+                html += '</tr>';
+            }
+
+            html += '</tbody>';
+            previewTable.innerHTML = html;
+        }
+
+        function showTemplateMappingModal(data, headers) {
+            excelData = data;
+            excelHeaders = headers;
+            
+            // Auto-detect mapping
+            columnMapping = autoDetectMapping(headers);
+            
+            generateMappingUI();
+            generatePreview();
+            updateSavedTemplatesList();
+            
+            document.getElementById('templateMappingModal').classList.add('show');
+        }
+
+        function closeTemplateMappingModal() {
+            document.getElementById('templateMappingModal').classList.remove('show');
+            excelData = null;
+            excelHeaders = [];
+            columnMapping = {};
+        }
+
+        function confirmMapping() {
+            // Validate required fields
+            const missingFields = [];
+            fieldDefinitions.forEach(field => {
+                if (field.required && columnMapping[field.key] === undefined) {
+                    missingFields.push(field.label);
+                }
+            });
+
+            if (missingFields.length > 0) {
+                showNotification(`❌ กรุณาระบุข้อมูลที่จำเป็น: ${missingFields.join(', ')}`, 'error');
+                return;
+            }
+
+            // Process data with mapping
+            processExcelDataWithMapping();
+            closeTemplateMappingModal();
+        }
+
+        function processExcelDataWithMapping() {
+            database = [];
+            let processedCount = 0;
+
+            for (let i = 1; i < excelData.length; i++) {
+                const row = excelData[i];
+                
+                if (row && row.length > 0) {
+                    const employee = {};
+                    
+                    fieldDefinitions.forEach(field => {
+                        const colIndex = columnMapping[field.key];
+                        if (colIndex !== undefined) {
+                            employee[field.key] = String(row[colIndex] || '').trim();
+                        } else {
+                            employee[field.key] = '';
+                        }
+                    });
+                    
+                    // Only add if required fields are present
+                    if (employee.empId && employee.name) {
+                        database.push(employee);
+                        processedCount++;
+                    }
+                }
+            }
+
+            console.log('✅ Processed:', processedCount, 'records with custom mapping');
+
+            if (database.length === 0) {
+                showNotification('❌ ไม่พบข้อมูลที่ถูกต้องในไฟล์', 'error');
+                document.getElementById('uploadStatus').innerHTML = 
+                    `<span style="color: #ff6b6b;">❌ ไม่พบข้อมูลที่ถูกต้อง</span>`;
+                return;
+            }
+
+            saveToLocalStorage();
+            updateStats();
+            updateSavedDatabasesList();
+            enableScanIfDatabaseExists();
+            
+            document.getElementById('uploadStatus').innerHTML = 
+                `✅ อัปโหลดสำเร็จ: <strong>${database.length} รายการ</strong> (จาก ${excelData.length - 1} แถว)`;
+            
+            showNotification(`✅ อัปโหลดสำเร็จ! พบ ${database.length} รายการ`, 'success');
+            document.getElementById('scanInput').focus();
+        }
+
+        function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const statusDiv = document.getElementById('uploadStatus');
+            statusDiv.innerHTML = '<div class="loading-indicator">⏳ กำลังอ่านไฟล์</div>';
+            showNotification('⏳ กำลังอ่านไฟล์...', 'info');
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const data = new Uint8Array(evt.target.result);
+                    const workbook = XLSX.read(data, { type: 'array', raw: false });
+                    
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false });
+                    
+                    console.log('📊 Total Rows:', jsonData.length);
+                    console.log('📋 Headers:', jsonData[0]);
+                    
+                    if (jsonData.length < 2) {
+                        showNotification('❌ ไฟล์ไม่มีข้อมูล', 'error');
+                        statusDiv.innerHTML = '<span style="color: #ff6b6b;">❌ ไฟล์ไม่มีข้อมูล</span>';
+                        return;
+                    }
+
+                    currentDatabaseName = file.name.replace(/\.[^/.]+$/, '');
+                    
+                    // Show template mapping modal
+                    showTemplateMappingModal(jsonData, jsonData[0]);
+
+                } catch (error) {
+                    console.error('❌ Error:', error);
+                    showNotification('❌ เกิดข้อผิดพลาด: ' + error.message, 'error');
+                    statusDiv.innerHTML = 
+                        `<span style="color: #ff6b6b;">❌ เกิดข้อผิดพลาด: ${error.message}</span>`;
+                }
+            };
+            
+            reader.onerror = function() {
+                showNotification('❌ ไม่สามารถอ่านไฟล์ได้', 'error');
+                statusDiv.innerHTML = 
+                    `<span style="color: #ff6b6b;">❌ ไม่สามารถอ่านไฟล์ได้</span>`;
+            };
+            
+            reader.readAsArrayBuffer(file);
+        }
+
         function enableScanIfDatabaseExists() {
             if (database.length > 0) {
                 document.getElementById('scanInput').disabled = false;
                 document.getElementById('scanWarning').style.display = 'none';
-                document.getElementById('scanWarning').nextElementSibling.style.display = 'block';
-                document.getElementById('scanWarning').nextElementSibling.style.color = '#666';
-                document.getElementById('scanWarning').nextElementSibling.textContent = '💡 วางเคอร์เซอร์ในช่องและสแกนเลย';
+                document.getElementById('saveDbBtn').style.display = 'block';
             } else {
                 document.getElementById('scanInput').disabled = true;
                 document.getElementById('scanWarning').style.display = 'block';
+                document.getElementById('saveDbBtn').style.display = 'none';
             }
         }
 
@@ -1446,108 +2044,6 @@
             document.getElementById('scanInput').focus();
         }
 
-        function handleFileUpload(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const statusDiv = document.getElementById('uploadStatus');
-            statusDiv.innerHTML = '<div class="loading-indicator">⏳ กำลังอ่านไฟล์</div>';
-            showNotification('⏳ กำลังอ่านไฟล์...', 'info');
-
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                try {
-                    const data = new Uint8Array(evt.target.result);
-                    const workbook = XLSX.read(data, { type: 'array', raw: false });
-                    
-                    const firstSheetName = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[firstSheetName];
-                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false });
-                    
-                    console.log('📊 Total Rows:', jsonData.length);
-                    console.log('📋 Headers:', jsonData[0]);
-                    console.log('🔍 Sample Row 2:', jsonData[1]);
-                    
-                    const debugContent = document.getElementById('debugContent');
-                    debugContent.innerHTML = `
-                        <strong>ไฟล์:</strong> ${file.name}<br>
-                        <strong>จำนวนแถวทั้งหมด:</strong> ${jsonData.length} แถว<br>
-                        <strong>หัวคอลัมน์:</strong> ${jsonData[0] ? jsonData[0].join(', ') : 'ไม่พบ'}<br>
-                        <strong>ตัวอย่างข้อมูลแถวที่ 2:</strong><br>
-                        ${jsonData[1] ? jsonData[1].map((val, i) => `Column ${i}: ${val}`).join('<br>') : 'ไม่มีข้อมูล'}
-                    `;
-                    document.getElementById('debugBox').classList.add('show');
-                    
-                    database = [];
-                    let processedCount = 0;
-                    
-                    for (let i = 1; i < jsonData.length; i++) {
-                        const row = jsonData[i];
-                        
-                        if (row && row.length > 0 && row[1]) {
-                            const employee = {
-                                no: String(row[0] || i).trim(),
-                                empId: String(row[1] || '').trim(),
-                                badId: String(row[2] || '').trim(),
-                                name: String(row[3] || '').trim(),
-                                batch: String(row[4] || '').trim(),
-                                phone: String(row[5] || '').trim(),
-                                dep: String(row[6] || '').trim(),
-                                area: String(row[7] || '').trim(),
-                                position: String(row[8] || '').trim(),
-                                shift: String(row[9] || '').trim()
-                            };
-                            
-                            if (employee.empId && employee.name) {
-                                database.push(employee);
-                                processedCount++;
-                            }
-                        }
-                    }
-
-                    console.log('✅ Processed:', processedCount, 'records');
-                    console.log('📦 Sample data:', database.slice(0, 3));
-
-                    if (database.length === 0) {
-                        showNotification('❌ ไม่พบข้อมูลในไฟล์ กรุณาตรวจสอบรูปแบบไฟล์', 'error');
-                        statusDiv.innerHTML = 
-                            `<span style="color: #ff6b6b;">❌ ไม่พบข้อมูลในไฟล์ (อ่านได้ ${jsonData.length} แถว แต่ไม่มีข้อมูลที่ถูกต้อง)</span>`;
-                        return;
-                    }
-
-                    currentDatabaseName = file.name.replace(/\.[^/.]+$/, '');
-                    saveToLocalStorage();
-                    updateStats();
-                    updateSavedDatabasesList();
-                    enableScanIfDatabaseExists();
-                    
-                    statusDiv.innerHTML = 
-                        `✅ อัปโหลดสำเร็จ: <strong>${database.length} รายการ</strong> จาก ${jsonData.length - 1} แถว`;
-                    
-                    showNotification(`✅ อัปโหลดสำเร็จ! พบ ${database.length} รายการ`, 'success');
-                    document.getElementById('scanInput').focus();
-                    
-                    setTimeout(() => {
-                        document.getElementById('debugBox').classList.remove('show');
-                    }, 8000);
-
-                } catch (error) {
-                    console.error('❌ Error:', error);
-                    showNotification('❌ เกิดข้อผิดพลาด: ' + error.message, 'error');
-                    statusDiv.innerHTML = 
-                        `<span style="color: #ff6b6b;">❌ เกิดข้อผิดพลาด: ${error.message}</span>`;
-                }
-            };
-            
-            reader.onerror = function() {
-                showNotification('❌ ไม่สามารถอ่านไฟล์ได้', 'error');
-                statusDiv.innerHTML = 
-                    `<span style="color: #ff6b6b;">❌ ไม่สามารถอ่านไฟล์ได้</span>`;
-            };
-            
-            reader.readAsArrayBuffer(file);
-        }
-
         function processScan(scannedId) {
             if (!scannedId) return;
 
@@ -1688,7 +2184,7 @@
             };
 
             scannedRecords.unshift(record);
-            currentPage = 1; // Reset to first page
+            currentPage = 1;
             saveToLocalStorage();
             showResult(record);
             updateTable();
@@ -1717,7 +2213,6 @@
             setTimeout(() => resultBox.classList.add('show'), 10);
         }
 
-        // Pagination Functions
         function previousPage() {
             if (currentPage > 1) {
                 currentPage--;
@@ -1743,13 +2238,11 @@
                 return;
             }
 
-            // Calculate pagination
             const totalPages = Math.ceil(scannedRecords.length / itemsPerPage);
             const startIndex = (currentPage - 1) * itemsPerPage;
             const endIndex = Math.min(startIndex + itemsPerPage, scannedRecords.length);
             const pageRecords = scannedRecords.slice(startIndex, endIndex);
 
-            // Show pagination if more than itemsPerPage
             if (scannedRecords.length > itemsPerPage) {
                 paginationControls.style.display = 'flex';
                 document.getElementById('pageInfo').textContent = 
@@ -1842,7 +2335,6 @@
             if (confirm('ต้องการลบรายการนี้หรือไม่?')) {
                 scannedRecords.splice(index, 1);
                 
-                // Adjust current page if needed
                 const totalPages = Math.ceil(scannedRecords.length / itemsPerPage);
                 if (currentPage > totalPages && totalPages > 0) {
                     currentPage = totalPages;
