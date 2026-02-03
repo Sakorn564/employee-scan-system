@@ -277,6 +277,166 @@
             opacity: 0.95;
         }
 
+        /* Employee Card with Boxes */
+        .employee-cards-container {
+            margin-bottom: 30px;
+        }
+
+        .employee-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .card-number {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .info-boxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .info-box-item {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border-left: 4px solid;
+        }
+
+        .info-box-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .info-box-item.box-empid {
+            border-left-color: #667eea;
+            background: linear-gradient(135deg, #ffffff 0%, #e3f2fd 100%);
+        }
+
+        .info-box-item.box-badid {
+            border-left-color: #ec4899;
+            background: linear-gradient(135deg, #ffffff 0%, #fce7f3 100%);
+        }
+
+        .info-box-item.box-name {
+            border-left-color: #10b981;
+            background: linear-gradient(135deg, #ffffff 0%, #d1fae5 100%);
+        }
+
+        .info-box-item.box-batch {
+            border-left-color: #f59e0b;
+            background: linear-gradient(135deg, #ffffff 0%, #fef3c7 100%);
+        }
+
+        .info-box-item.box-phone {
+            border-left-color: #06b6d4;
+            background: linear-gradient(135deg, #ffffff 0%, #cffafe 100%);
+        }
+
+        .info-box-item.box-dep {
+            border-left-color: #ef4444;
+            background: linear-gradient(135deg, #ffffff 0%, #fee2e2 100%);
+        }
+
+        .info-box-item.box-area {
+            border-left-color: #8b5cf6;
+            background: linear-gradient(135deg, #ffffff 0%, #ede9fe 100%);
+        }
+
+        .info-box-item.box-position {
+            border-left-color: #14b8a6;
+            background: linear-gradient(135deg, #ffffff 0%, #ccfbf1 100%);
+        }
+
+        .info-box-item.box-shift {
+            border-left-color: #f97316;
+            background: linear-gradient(135deg, #ffffff 0%, #ffedd5 100%);
+        }
+
+        .box-icon {
+            font-size: 2em;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+
+        .box-label {
+            font-size: 0.85em;
+            color: #64748b;
+            margin-bottom: 6px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .box-value {
+            font-size: 1.15em;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px dashed #cbd5e1;
+        }
+
+        .action-btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            font-family: 'Kanit', sans-serif;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #78350f;
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+
         /* Table */
         .table-wrap {
             background: white;
@@ -316,50 +476,11 @@
             background: #f7fafc;
         }
 
-        .data-table tbody tr:last-child td {
-            border-bottom: none;
-        }
-
         .empty-message {
             text-align: center;
             padding: 50px 20px;
             color: #a0aec0;
             font-size: 0.95em;
-        }
-
-        .action-btns {
-            display: flex;
-            gap: 6px;
-        }
-
-        .action-btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8em;
-            font-weight: 500;
-            font-family: 'Kanit', sans-serif;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-
-        .btn-edit {
-            background: #fbbf24;
-            color: #78350f;
-        }
-
-        .btn-edit:hover {
-            background: #f59e0b;
-        }
-
-        .btn-delete {
-            background: #ef4444;
-            color: white;
-        }
-
-        .btn-delete:hover {
-            background: #dc2626;
         }
 
         /* Export */
@@ -442,18 +563,19 @@
                 grid-template-columns: 1fr;
             }
 
+            .info-boxes {
+                grid-template-columns: 1fr;
+            }
+
             .btn-group,
-            .export-btns {
+            .export-btns,
+            .card-actions {
                 flex-direction: column;
             }
 
             .btn {
                 width: 100%;
                 justify-content: center;
-            }
-
-            .table-wrap {
-                overflow-x: auto;
             }
         }
     </style>
@@ -505,58 +627,8 @@
             </div>
 
             <div class="form-field">
-                <label class="field-label">ชื่อของรายงาน <span class="required">*</span></label>
-                <input type="text" class="field-input" id="inputTitle" placeholder="เช่น รายงานพนักงานเข้างาน">
-            </div>
-
-            <div class="form-field">
-                <label class="field-label">จำนวนของรายงาน <span class="required">*</span></label>
-                <input type="number" class="field-input" id="inputQty" value="1" min="1">
-            </div>
-
-            <div class="form-field">
                 <label class="field-label">Bad ID <span class="required">*</span></label>
                 <input type="text" class="field-input" id="inputBadId" placeholder="แสกนหรือพิมพ์ Bad ID เช่น 1000333210">
-            </div>
-
-            <div class="form-field">
-                <label class="field-label">รหัสพนักงาน (แสดงอัตโนมัติ)</label>
-                <input type="text" class="field-input" id="displayEmpId" readonly>
-            </div>
-
-            <div class="form-field">
-                <label class="field-label">ชื่อ นามสกุล (แสดงอัตโนมัติ)</label>
-                <input type="text" class="field-input" id="displayName" readonly>
-            </div>
-
-            <div class="form-field">
-                <label class="field-label">รุ่นที่เข้างาน (แสดงอัตโนมัติ)</label>
-                <input type="text" class="field-input" id="displayBatch" readonly>
-            </div>
-
-            <div class="form-field">
-                <label class="field-label">เบอร์โทรศัพท์ (แสดงอัตโนมัติ)</label>
-                <input type="text" class="field-input" id="displayPhone" readonly>
-            </div>
-
-            <div class="form-field">
-                <label class="field-label">Dep. (แสดงอัตโนมัติ)</label>
-                <input type="text" class="field-input" id="displayDep" readonly>
-            </div>
-
-            <div class="form-field">
-                <label class="field-label">Area (แสดงอัตโนมัติ)</label>
-                <input type="text" class="field-input" id="displayArea" readonly>
-            </div>
-
-            <div class="form-field">
-                <label class="field-label">ตำแหน่งงาน (แสดงอัตโนมัติ)</label>
-                <input type="text" class="field-input" id="displayPosition" readonly>
-            </div>
-
-            <div class="form-field">
-                <label class="field-label">กะการทำงาน (แสดงอัตโนมัติ)</label>
-                <input type="text" class="field-input" id="displayShift" readonly>
             </div>
 
             <div class="btn-group">
@@ -569,7 +641,7 @@
             </div>
         </div>
 
-        <!-- Step 3 -->
+        <!-- Step 3 - Cards Display -->
         <div class="step-card" id="step3Card" style="display: none;">
             <div class="step-header">
                 <span class="step-icon">📊</span>
@@ -587,6 +659,10 @@
                 </div>
             </div>
 
+            <!-- Employee Cards -->
+            <div id="employeeCardsContainer" class="employee-cards-container"></div>
+
+            <!-- Table Summary -->
             <div class="table-wrap">
                 <table class="data-table">
                     <thead>
@@ -601,12 +677,11 @@
                             <th>Area</th>
                             <th>ตำแหน่งงาน</th>
                             <th>กะการทำงาน</th>
-                            <th>จัดการ</th>
                         </tr>
                     </thead>
                     <tbody id="tableData">
                         <tr>
-                            <td colspan="11" class="empty-message">ยังไม่มีข้อมูล กรุณาบันทึกข้อมูลจากฟอร์มด้านบน</td>
+                            <td colspan="10" class="empty-message">ยังไม่มีข้อมูล</td>
                         </tr>
                     </tbody>
                 </table>
@@ -642,7 +717,7 @@
             const records = localStorage.getItem('dataRecords');
             if (records) {
                 dataRecords = JSON.parse(records);
-                updateTable();
+                updateDisplay();
             }
         }
 
@@ -663,7 +738,7 @@
                     dbMaster = [];
                     for (let i = 1; i < rows.length; i++) {
                         const r = rows[i];
-                        if (r[2]) { // Check Bad ID exists
+                        if (r[2]) {
                             dbMaster.push({
                                 no: r[0],
                                 empId: String(r[1] || '').trim(),
@@ -691,88 +766,131 @@
             reader.readAsArrayBuffer(file);
         });
 
-        document.getElementById('inputBadId').addEventListener('input', function() {
-            const badId = this.value.trim();
-            if (badId) {
-                const emp = dbMaster.find(e => e.badId === badId);
-                if (emp) {
-                    document.getElementById('displayEmpId').value = emp.empId || '-';
-                    document.getElementById('displayName').value = emp.name || '-';
-                    document.getElementById('displayBatch').value = emp.batch || '-';
-                    document.getElementById('displayPhone').value = emp.phone || '-';
-                    document.getElementById('displayDep').value = emp.dep || '-';
-                    document.getElementById('displayArea').value = emp.area || '-';
-                    document.getElementById('displayPosition').value = emp.position || '-';
-                    document.getElementById('displayShift').value = emp.shift || '-';
-                } else {
-                    clearAutoFields();
-                }
-            } else {
-                clearAutoFields();
-            }
-        });
-
-        function clearAutoFields() {
-            document.getElementById('displayEmpId').value = '';
-            document.getElementById('displayName').value = '';
-            document.getElementById('displayBatch').value = '';
-            document.getElementById('displayPhone').value = '';
-            document.getElementById('displayDep').value = '';
-            document.getElementById('displayArea').value = '';
-            document.getElementById('displayPosition').value = '';
-            document.getElementById('displayShift').value = '';
-        }
-
         function submitData() {
-            const title = document.getElementById('inputTitle').value.trim();
-            const qty = document.getElementById('inputQty').value.trim();
             const badId = document.getElementById('inputBadId').value.trim();
-            const empId = document.getElementById('displayEmpId').value.trim();
-            const name = document.getElementById('displayName').value.trim();
-            const batch = document.getElementById('displayBatch').value.trim();
-            const phone = document.getElementById('displayPhone').value.trim();
-            const dep = document.getElementById('displayDep').value.trim();
-            const area = document.getElementById('displayArea').value.trim();
-            const position = document.getElementById('displayPosition').value.trim();
-            const shift = document.getElementById('displayShift').value.trim();
 
-            if (!title || !qty || !badId) {
-                showMsg('❌ กรุณากรอกข้อมูลที่จำเป็น (ชื่อรายงาน, จำนวน, Bad ID)', 'error');
+            if (!badId) {
+                showMsg('❌ กรุณากรอก Bad ID', 'error');
                 return;
             }
 
-            if (!empId || !name) {
-                showMsg('❌ ไม่พบข้อมูลพนักงานจาก Bad ID นี้', 'error');
+            const emp = dbMaster.find(e => e.badId === badId);
+
+            if (!emp) {
+                showMsg('❌ ไม่พบข้อมูล Bad ID: ' + badId, 'error');
+                return;
+            }
+
+            // Check duplicate
+            const exists = dataRecords.find(r => r.badId === badId);
+            if (exists) {
+                showMsg('⚠️ Bad ID นี้ถูกบันทึกแล้ว', 'error');
                 return;
             }
 
             const record = {
                 id: Date.now(),
-                title, qty, empId, badId, name, batch, phone, dep, area, position, shift,
+                ...emp,
                 timestamp: new Date().toLocaleString('th-TH')
             };
 
             dataRecords.push(record);
             localStorage.setItem('dataRecords', JSON.stringify(dataRecords));
             
-            updateTable();
+            updateDisplay();
             resetForm();
-            showMsg('✅ บันทึกสำเร็จ', 'success');
+            showMsg('✅ บันทึกสำเร็จ: ' + emp.name, 'success');
             document.getElementById('inputBadId').focus();
         }
 
-        function updateTable() {
+        function updateDisplay() {
+            const cardsContainer = document.getElementById('employeeCardsContainer');
             const tbody = document.getElementById('tableData');
             
             if (dataRecords.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="11" class="empty-message">ยังไม่มีข้อมูล กรุณาบันทึกข้อมูลจากฟอร์มด้านบน</td></tr>';
+                cardsContainer.innerHTML = '';
+                tbody.innerHTML = '<tr><td colspan="10" class="empty-message">ยังไม่มีข้อมูล กรุณาแสกน Bad ID</td></tr>';
                 document.getElementById('step3Card').style.display = 'none';
                 return;
             }
 
             document.getElementById('step3Card').style.display = 'block';
-            tbody.innerHTML = '';
 
+            // Update Cards
+            cardsContainer.innerHTML = '';
+            dataRecords.forEach((rec, i) => {
+                const card = document.createElement('div');
+                card.className = 'employee-card';
+                card.innerHTML = `
+                    <div class="card-number">${i + 1}</div>
+                    
+                    <div class="info-boxes">
+                        <div class="info-box-item box-empid">
+                            <div class="box-icon">🆔</div>
+                            <div class="box-label">รหัสพนักงาน</div>
+                            <div class="box-value">${rec.empId || '-'}</div>
+                        </div>
+                        
+                        <div class="info-box-item box-badid">
+                            <div class="box-icon">💳</div>
+                            <div class="box-label">Bad ID</div>
+                            <div class="box-value">${rec.badId || '-'}</div>
+                        </div>
+                        
+                        <div class="info-box-item box-name">
+                            <div class="box-icon">👤</div>
+                            <div class="box-label">ชื่อ นามสกุล</div>
+                            <div class="box-value">${rec.name || '-'}</div>
+                        </div>
+                        
+                        <div class="info-box-item box-batch">
+                            <div class="box-icon">📅</div>
+                            <div class="box-label">รุ่นที่เข้างาน</div>
+                            <div class="box-value">${rec.batch || '-'}</div>
+                        </div>
+                        
+                        <div class="info-box-item box-phone">
+                            <div class="box-icon">📱</div>
+                            <div class="box-label">เบอร์โทรศัพท์</div>
+                            <div class="box-value">${rec.phone || '-'}</div>
+                        </div>
+                        
+                        <div class="info-box-item box-dep">
+                            <div class="box-icon">🏢</div>
+                            <div class="box-label">Department</div>
+                            <div class="box-value">${rec.dep || '-'}</div>
+                        </div>
+                        
+                        <div class="info-box-item box-area">
+                            <div class="box-icon">📍</div>
+                            <div class="box-label">Area</div>
+                            <div class="box-value">${rec.area || '-'}</div>
+                        </div>
+                        
+                        <div class="info-box-item box-position">
+                            <div class="box-icon">💼</div>
+                            <div class="box-label">ตำแหน่งงาน</div>
+                            <div class="box-value">${rec.position || '-'}</div>
+                        </div>
+                        
+                        <div class="info-box-item box-shift">
+                            <div class="box-icon">⏰</div>
+                            <div class="box-label">กะการทำงาน</div>
+                            <div class="box-value">${rec.shift || '-'}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-actions">
+                        <button class="action-btn btn-delete" onclick="deleteData(${rec.id})">
+                            🗑️ ลบข้อมูล
+                        </button>
+                    </div>
+                `;
+                cardsContainer.appendChild(card);
+            });
+
+            // Update Table
+            tbody.innerHTML = '';
             dataRecords.forEach((rec, i) => {
                 const row = tbody.insertRow();
                 row.innerHTML = `
@@ -786,56 +904,26 @@
                     <td>${rec.area || '-'}</td>
                     <td>${rec.position || '-'}</td>
                     <td>${rec.shift || '-'}</td>
-                    <td>
-                        <div class="action-btns">
-                            <button class="action-btn btn-edit" onclick="editData(${rec.id})">✏️ แก้ไข</button>
-                            <button class="action-btn btn-delete" onclick="deleteData(${rec.id})">🗑️ ลบ</button>
-                        </div>
-                    </td>
                 `;
             });
 
+            // Update Stats
             document.getElementById('totalStat').textContent = dataRecords.length;
             const uniq = new Set(dataRecords.map(r => r.badId));
             document.getElementById('uniqueStat').textContent = uniq.size;
-        }
-
-        function editData(id) {
-            const rec = dataRecords.find(r => r.id === id);
-            if (!rec) return;
-
-            document.getElementById('inputTitle').value = rec.title;
-            document.getElementById('inputQty').value = rec.qty;
-            document.getElementById('inputBadId').value = rec.badId;
-            document.getElementById('displayEmpId').value = rec.empId;
-            document.getElementById('displayName').value = rec.name;
-            document.getElementById('displayBatch').value = rec.batch;
-            document.getElementById('displayPhone').value = rec.phone;
-            document.getElementById('displayDep').value = rec.dep;
-            document.getElementById('displayArea').value = rec.area;
-            document.getElementById('displayPosition').value = rec.position;
-            document.getElementById('displayShift').value = rec.shift;
-
-            dataRecords = dataRecords.filter(r => r.id !== id);
-            localStorage.setItem('dataRecords', JSON.stringify(dataRecords));
-            updateTable();
-
-            window.scrollTo({top: 0, behavior: 'smooth'});
-            showMsg('ℹ️ กรุณาแก้ไขและบันทึกอีกครั้ง', 'info');
         }
 
         function deleteData(id) {
             if (confirm('ต้องการลบรายการนี้?')) {
                 dataRecords = dataRecords.filter(r => r.id !== id);
                 localStorage.setItem('dataRecords', JSON.stringify(dataRecords));
-                updateTable();
+                updateDisplay();
                 showMsg('✅ ลบสำเร็จ', 'success');
             }
         }
 
         function resetForm() {
             document.getElementById('inputBadId').value = '';
-            clearAutoFields();
             document.getElementById('inputBadId').focus();
         }
 
@@ -843,7 +931,7 @@
             if (confirm('ต้องการล้างรายการทั้งหมด?')) {
                 dataRecords = [];
                 localStorage.removeItem('dataRecords');
-                updateTable();
+                updateDisplay();
                 showMsg('✅ ล้างสำเร็จ', 'success');
             }
         }
@@ -855,7 +943,7 @@
                 localStorage.clear();
                 document.getElementById('displayFileName').textContent = '';
                 document.getElementById('step2Card').style.display = 'none';
-                updateTable();
+                updateDisplay();
                 showMsg('✅ ล้างทั้งหมดสำเร็จ', 'success');
             }
         }
@@ -870,7 +958,6 @@
             
             dbMaster.slice(0, 3).forEach((e, i) => {
                 msg += `${i + 1}. Bad ID: ${e.badId}\n`;
-                msg += `   รหัส: ${e.empId}\n`;
                 msg += `   ชื่อ: ${e.name}\n`;
                 msg += `   Dep: ${e.dep}\n\n`;
             });
