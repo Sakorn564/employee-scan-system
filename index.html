@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบแสกนและจัดการข้อมูลพนักงาน</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 30px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .control-panel {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .upload-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px dashed #667eea;
+            text-align: center;
+        }
+
+        .upload-section input[type="file"] {
+            display: none;
+        }
+
+        .upload-label {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .upload-label:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .scan-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #667eea;
+        }
+
+        .scan-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1em;
+            transition: all 0.3s;
+        }
+
+        .scan-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+
+        .btn-save {
+            background: #28a745;
+        }
+
+        .btn-save:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-clear {
+            background: #dc3545;
+        }
+
+        .btn-clear:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .btn-export {
+            background: #17a2b8;
+        }
+
+        .btn-export:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+
+        .status {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .status.success {
+            color: #28a745;
+            border: 2px solid #28a745;
+        }
+
+        .status.error {
+            color: #dc3545;
+            border: 2px solid #dc3545;
+        }
+
+        .status.info {
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .data-display {
+            margin-top: 30px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .data-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .data-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 1em;
+        }
+
+        .data-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table tbody tr {
+            transition: all 0.3s;
+        }
+
+        .data-table tbody tr:hover {
+            background: #f8f9fa;
+            transform: scale(1.01);
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 5px;
+            transition: all 0.3s;
+        }
+
+        .edit-btn {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .edit-btn:hover {
+            background: #e0a800;
+            transform: scale(1.05);
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+            transform: scale(1.05);
+        }
+
+        .save-edit-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .save-edit-btn:hover {
+            background: #218838;
+        }
+
+        .cancel-edit-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .cancel-edit-btn:hover {
+            background: #5a6268;
+        }
+
+        .edit-input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            font-size: 0.95em;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 50px;
+            color: #999;
+            font-size: 1.2em;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .stat-card h3 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .control-panel {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .data-table {
+                font-size: 0.9em;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 ระบบแสกนและจัดการข้อมูลพนักงาน</h1>
+            <p>Upload Excel ➜ แสกนหมายเลข ➜ จัดการข้อมูล</p>
+        </div>
+
+        <div class="stats" id="stats" style="display: none;">
+            <div class="stat-card">
+                <h3 id="totalEmployees">0</h3>
+                <p>พนักงานทั้งหมดในฐานข้อมูล</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="scannedCount">0</h3>
+                <p>จำนวนที่แสกนแล้ว</p>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <div class="upload-section">
+                <label for="excelFile" class="upload-label">
+                    📤 เลือกไฟล์ Excel
+                </label>
+                <input type="file" id="excelFile" accept=".xlsx,.xls">
+                <div id="fileName" style="margin-top: 10px; color: #667eea; font-weight: bold;"></div>
+            </div>
+
+            <div class="scan-section">
+                <input type="text" 
+                       id="scanInput" 
+                       class="scan-input" 
+                       placeholder="🔍 แสกนหรือพิมพ์หมายเลข Bad ID..."
+                       disabled>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-save" onclick="saveDatabase()" disabled id="saveBtn">
+                    💾 บันทึกฐานข้อมูล
+                </button>
+                <button class="btn btn-clear" onclick="clearDatabase()" disabled id="clearBtn">
+                    🗑️ ล้างฐานข้อมูล
+                </button>
+                <button class="btn btn-export" onclick="exportData()" disabled id="exportBtn">
+                    📥 Export ข้อมูล
+                </button>
+            </div>
+        </div>
+
+        <div id="statusMessage" class="status" style="display: none;"></div>
+
+        <div class="data-display">
+            <table class="data-table" id="dataTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>ลำดับ</th>
+                        <th>รหัสพนักงาน</th>
+                        <th>ชื่อ นามสกุล</th>
+                        <th>รุ่นที่เข้างาน</th>
+                        <th>Dep.</th>
+                        <th>Area</th>
+                        <th>ตำแหน่งงาน</th>
+                        <th>กะการทำงาน</th>
+                        <th>จัดการ</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+            <div id="noData" class="no-data">
+                📋 ยังไม่มีข้อมูล - กรุณา Upload ไฟล์ Excel และเริ่มแสกน
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let masterData = [];
+        let scannedData = [];
+        let editingRow = null;
+
+        // Load saved data from localStorage
+        window.onload = function() {
+            loadSavedData();
+        };
+
+        function loadSavedData() {
+            const saved = localStorage.getItem('employeeDatabase');
+            if (saved) {
+                try {
+                    masterData = JSON.parse(saved);
+                    showStatus('✅ โหลดฐานข้อมูลที่บันทึกไว้สำเร็จ', 'success');
+                    document.getElementById('scanInput').disabled = false;
+                    enableButtons();
+                    updateStats();
+                } catch (e) {
+                    console.error('Error loading saved data:', e);
+                }
+            }
+
+            const savedScanned = localStorage.getItem('scannedData');
+            if (savedScanned) {
+                try {
+                    scannedData = JSON.parse(savedScanned);
+                    displayData();
+                } catch (e) {
+                    console.error('Error loading scanned data:', e);
+                }
+            }
+        }
+
+        // Upload Excel file
+        document.getElementById('excelFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            document.getElementById('fileName').textContent = `📄 ${file.name}`;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const data = new Uint8Array(event.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, {header: 1});
+
+                    // Process data (skip header row)
+                    masterData = [];
+                    for (let i = 1; i < jsonData.length; i++) {
+                        const row = jsonData[i];
+                        if (row[2]) { // Check if Bad ID exists
+                            masterData.push({
+                                no: row[0],
+                                employeeId: row[1],
+                                badId: String(row[2]).trim(),
+                                name: row[3],
+                                batch: row[4],
+                                phone: row[5],
+                                dep: row[6],
+                                area: row[7],
+                                position: row[8],
+                                shift: row[9]
+                            });
+                        }
+                    }
+
+                    showStatus(`✅ อัพโหลดสำเร็จ! พบข้อมูล ${masterData.length} รายการ`, 'success');
+                    document.getElementById('scanInput').disabled = false;
+                    document.getElementById('scanInput').focus();
+                    enableButtons();
+                    updateStats();
+
+                } catch (error) {
+                    showStatus('❌ เกิดข้อผิดพลาดในการอ่านไฟล์: ' + error.message, 'error');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        });
+
+        // Scan input handler
+        document.getElementById('scanInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const scannedId = this.value.trim();
+                if (!scannedId) return;
+
+                // Search in master data
+                const found = masterData.find(emp => emp.badId === scannedId);
+
+                if (found) {
+                    // Check if already scanned
+                    const alreadyScanned = scannedData.find(emp => emp.badId === scannedId);
+                    if (alreadyScanned) {
+                        showStatus('⚠️ หมายเลขนี้ถูกแสกนแล้ว!', 'error');
+                    } else {
+                        scannedData.push({...found});
+                        displayData();
+                        showStatus('✅ แสกนสำเร็จ: ' + found.name, 'success');
+                        updateStats();
+                        saveScannedData();
+                    }
+                } else {
+                    showStatus('❌ ไม่พบข้อมูล Bad ID: ' + scannedId, 'error');
+                }
+
+                this.value = '';
+                this.focus();
+            }
+        });
+
+        function displayData() {
+            const tableBody = document.getElementById('tableBody');
+            const dataTable = document.getElementById('dataTable');
+            const noData = document.getElementById('noData');
+
+            if (scannedData.length === 0) {
+                dataTable.style.display = 'none';
+                noData.style.display = 'block';
+                return;
+            }
+
+            dataTable.style.display = 'table';
+            noData.style.display = 'none';
+            tableBody.innerHTML = '';
+
+            scannedData.forEach((emp, index) => {
+                const row = document.createElement('tr');
+                row.id = `row-${index}`;
+                
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td class="data-cell" data-field="employeeId">${emp.employeeId || '-'}</td>
+                    <td class="data-cell" data-field="name">${emp.name || '-'}</td>
+                    <td class="data-cell" data-field="batch">${emp.batch || '-'}</td>
+                    <td class="data-cell" data-field="dep">${emp.dep || '-'}</td>
+                    <td class="data-cell" data-field="area">${emp.area || '-'}</td>
+                    <td class="data-cell" data-field="position">${emp.position || '-'}</td>
+                    <td class="data-cell" data-field="shift">${emp.shift || '-'}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editRow(${index})">✏️ แก้ไข</button>
+                        <button class="action-btn delete-btn" onclick="deleteRow(${index})">🗑️ ลบ</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function editRow(index) {
+            if (editingRow !== null) {
+                showStatus('⚠️ กรุณาบันทึกหรือยกเลิกการแก้ไขก่อน', 'error');
+                return;
+            }
+
+            editingRow = index;
+            const row = document.getElementById(`row-${index}`);
+            const cells = row.querySelectorAll('.data-cell');
+            const emp = scannedData[index];
+
+            cells.forEach(cell => {
+                const field = cell.getAttribute('data-field');
+                cell.innerHTML = `<input type="text" class="edit-input" value="${emp[field] || ''}" data-field="${field}">`;
+            });
+
+            const actionsCell = row.cells[row.cells.length - 1];
+            actionsCell.innerHTML = `
+                <button class="action-btn save-edit-btn" onclick="saveEdit(${index})">💾 บันทึก</button>
+                <button class="action-btn cancel-edit-btn" onclick="cancelEdit(${index})">❌ ยกเลิก</button>
+            `;
+        }
+
+        function saveEdit(index) {
+            const row = document.getElementById(`row-${index}`);
+            const inputs = row.querySelectorAll('.edit-input');
+
+            inputs.forEach(input => {
+                const field = input.getAttribute('data-field');
+                scannedData[index][field] = input.value;
+            });
+
+            editingRow = null;
+            displayData();
+            saveScannedData();
+            showStatus('✅ บันทึกการแก้ไขสำเร็จ', 'success');
+        }
+
+        function cancelEdit(index) {
+            editingRow = null;
+            displayData();
+            showStatus('ℹ️ ยกเลิกการแก้ไข', 'info');
+        }
+
+        function deleteRow(index) {
+            if (editingRow !== null) {
+                showStatus('⚠️ กรุณาบันทึกหรือยกเลิกการแก้ไขก่อน', 'error');
+                return;
+            }
+
+            if (confirm('ต้องการลบข้อมูลนี้หรือไม่?')) {
+                scannedData.splice(index, 1);
+                displayData();
+                saveScannedData();
+                updateStats();
+                showStatus('✅ ลบข้อมูลสำเร็จ', 'success');
+            }
+        }
+
+        function saveDatabase() {
+            if (masterData.length === 0) {
+                showStatus('⚠️ ไม่มีฐานข้อมูลให้บันทึก', 'error');
+                return;
+            }
+
+            localStorage.setItem('employeeDatabase', JSON.stringify(masterData));
+            showStatus('✅ บันทึกฐานข้อมูลสำเร็จ', 'success');
+        }
+
+        function saveScannedData() {
+            localStorage.setItem('scannedData', JSON.stringify(scannedData));
+        }
+
+        function clearDatabase() {
+            if (confirm('ต้องการล้างฐานข้อมูลทั้งหมดหรือไม่?')) {
+                masterData = [];
+                scannedData = [];
+                localStorage.removeItem('employeeDatabase');
+                localStorage.removeItem('scannedData');
+                displayData();
+                updateStats();
+                document.getElementById('scanInput').disabled = true;
+                document.getElementById('fileName').textContent = '';
+                disableButtons();
+                showStatus('✅ ล้างฐานข้อมูลสำเร็จ', 'success');
+            }
+        }
+
+        function exportData() {
+            if (scannedData.length === 0) {
+                showStatus('⚠️ ไม่มีข้อมูลให้ Export', 'error');
+                return;
+            }
+
+            const exportData = scannedData.map((emp, index) => ({
+                'ลำดับ': index + 1,
+                'รหัสพนักงาน': emp.employeeId,
+                'ชื่อ นามสกุล': emp.name,
+                'รุ่นที่เข้างาน': emp.batch,
+                'Dep.': emp.dep,
+                'Area': emp.area,
+                'ตำแหน่งงาน': emp.position,
+                'กะการทำงาน': emp.shift
+            }));
+
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Scanned Data');
+
+            const date = new Date().toISOString().split('T')[0];
+            XLSX.writeFile(wb, `ข้อมูลแสกน_${date}.xlsx`);
+
+            showStatus('✅ Export ข้อมูลสำเร็จ', 'success');
+        }
+
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+            statusEl.style.display = 'block';
+
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 3000);
+        }
+
+        function enableButtons() {
+            document.getElementById('saveBtn').disabled = false;
+            document.getElementById('clearBtn').disabled = false;
+            document.getElementById('exportBtn').disabled = false;
+        }
+
+        function disableButtons() {
+            document.getElementById('saveBtn').disabled = true;
+            document.getElementById('clearBtn').disabled = true;
+            document.getElementById('exportBtn').disabled = true;
+        }
+
+        function updateStats() {
+            const statsEl = document.getElementById('stats');
+            if (masterData.length > 0) {
+                statsEl.style.display = 'grid';
+                document.getElementById('totalEmployees').textContent = masterData.length;
+                document.getElementById('scannedCount').textContent = scannedData.length;
+            } else {
+                statsEl.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
