@@ -108,7 +108,7 @@
 
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 15px;
             margin-top: 25px;
         }
@@ -128,8 +128,8 @@
         }
 
         .info-item.box-no {
-            border-left-color: #667eea;
-            background: linear-gradient(135deg, #ffffff 0%, #e3f2fd 100%);
+            border-left-color: #3b82f6;
+            background: linear-gradient(135deg, #ffffff 0%, #dbeafe 100%);
         }
 
         .info-item.box-empid {
@@ -229,7 +229,6 @@
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
         }
 
-        /* Rest of the existing styles... */
         .scan-section {
             text-align: center;
         }
@@ -458,12 +457,12 @@
             background: #5568d3;
         }
 
-        .btn-delete {
+        .btn-small.btn-delete {
             background: #ff6b6b;
             color: white;
         }
 
-        .btn-delete:hover {
+        .btn-small.btn-delete:hover {
             background: #ee5a6f;
         }
 
@@ -562,10 +561,11 @@
         }
 
         th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
             color: white;
             position: sticky;
             top: 0;
+            font-size: 0.9em;
         }
 
         tr:hover {
@@ -854,9 +854,7 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>
-                📱 ระบบสแกนและบันทึกข้อมูล
-            </h1>
+            <h1>📱 ระบบสแกนและบันทึกข้อมูล</h1>
             <p>สแกนหมายเลข - บันทึกอัตโนมัติ - Export Excel</p>
         </div>
 
@@ -1004,18 +1002,22 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>ลำดับ</th>
+                            <th>No.</th>
                             <th>รหัสพนักงาน</th>
-                            <th>ชื่อ-นามสกุล</th>
-                            <th>BAD ID</th>
-                            <th>วันที่</th>
-                            <th>เวลา</th>
+                            <th>Bad ID</th>
+                            <th>ชื่อ นามสกุล</th>
+                            <th>รุ่นที่เข้างาน</th>
+                            <th>เบอร์โทรศัพท์</th>
+                            <th>Dep.</th>
+                            <th>Area</th>
+                            <th>ตำแหน่งงาน</th>
+                            <th>กะการทำงาน</th>
                             <th>สถานะ</th>
                         </tr>
                     </thead>
                     <tbody id="dataTableBody">
                         <tr>
-                            <td colspan="7" style="text-align: center; padding: 40px; color: #999;">
+                            <td colspan="11" style="text-align: center; padding: 40px; color: #999;">
                                 ยังไม่มีข้อมูล - เริ่มสแกนเลย!
                             </td>
                         </tr>
@@ -1555,7 +1557,7 @@
             setTimeout(() => resultBox.classList.add('show'), 10);
         }
 
-        // Update employee cards
+        // Update employee cards - แก้ไขให้ตรงกับตาราง
         function updateEmployeeCards() {
             const container = document.getElementById('employeeCardsContainer');
             
@@ -1569,6 +1571,12 @@
                     <div class="card-badge">${index + 1}</div>
                     
                     <div class="info-grid">
+                        <div class="info-item box-no">
+                            <div class="item-icon">🔢</div>
+                            <div class="item-label">No.</div>
+                            <div class="item-value">${index + 1}</div>
+                        </div>
+                        
                         <div class="info-item box-empid">
                             <div class="item-icon">🆔</div>
                             <div class="item-label">รหัสพนักงาน</div>
@@ -1601,7 +1609,7 @@
                         
                         <div class="info-item box-dep">
                             <div class="item-icon">🏢</div>
-                            <div class="item-label">Department</div>
+                            <div class="item-label">Dep.</div>
                             <div class="item-value">${record.dep || '-'}</div>
                         </div>
                         
@@ -1688,14 +1696,14 @@
             reader.readAsArrayBuffer(file);
         }
 
-        // Update table
+        // Update table - แก้ไขให้ตรงกับตาราง
         function updateTable() {
             const tbody = document.getElementById('dataTableBody');
             
             if (scannedRecords.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="7" style="text-align: center; padding: 40px; color: #999;">
+                        <td colspan="11" style="text-align: center; padding: 40px; color: #999;">
                             ยังไม่มีข้อมูล - เริ่มสแกนเลย!
                         </td>
                     </tr>
@@ -1706,11 +1714,15 @@
             tbody.innerHTML = scannedRecords.map((record, index) => `
                 <tr>
                     <td>${index + 1}</td>
-                    <td>${record.empId}</td>
-                    <td>${record.name}</td>
-                    <td>${record.badId}</td>
-                    <td>${record.date}</td>
-                    <td>${record.time}</td>
+                    <td>${record.empId || '-'}</td>
+                    <td>${record.badId || '-'}</td>
+                    <td>${record.name || '-'}</td>
+                    <td>${record.batch || '-'}</td>
+                    <td>${record.phone || '-'}</td>
+                    <td>${record.dep || '-'}</td>
+                    <td>${record.area || '-'}</td>
+                    <td>${record.position || '-'}</td>
+                    <td>${record.shift || '-'}</td>
                     <td>
                         <span class="status-badge ${record.type === 'manual' ? 'status-manual' : 'status-success'}">
                             ${record.type === 'manual' ? '✎ Manual' : '✓ Auto'}
@@ -1731,7 +1743,7 @@
             document.getElementById('todayScans').textContent = todayScans;
         }
 
-        // Export to Excel
+        // Export to Excel - แก้ไขให้ตรงกับตาราง
         function exportToExcel() {
             if (scannedRecords.length === 0) {
                 showNotification('ไม่มีข้อมูลให้ Export', 'error');
@@ -1739,10 +1751,10 @@
             }
 
             const exportData = scannedRecords.map((record, index) => ({
-                'ลำดับ': index + 1,
+                'No.': index + 1,
                 'รหัสพนักงาน': record.empId,
-                'ชื่อ-นามสกุล': record.name,
-                'BAD ID': record.badId,
+                'Bad ID': record.badId,
+                'ชื่อ นามสกุล': record.name,
                 'รุ่นที่เข้างาน': record.batch || '-',
                 'เบอร์โทรศัพท์': record.phone || '-',
                 'Dep.': record.dep || '-',
@@ -1759,7 +1771,7 @@
             XLSX.utils.book_append_sheet(wb, ws, "รายการสแกน");
 
             ws['!cols'] = [
-                { wch: 8 }, { wch: 15 }, { wch: 25 }, { wch: 15 }, 
+                { wch: 6 }, { wch: 15 }, { wch: 15 }, { wch: 25 }, 
                 { wch: 12 }, { wch: 15 }, { wch: 10 }, { wch: 12 },
                 { wch: 20 }, { wch: 10 }, { wch: 15 }, { wch: 12 }, { wch: 15 }
             ];
@@ -1772,10 +1784,11 @@
 
         // Download template
         function downloadTemplate() {
-            const ws = XLSX.utils.json_to_sheet(sampleData.map(item => ({
+            const ws = XLSX.utils.json_to_sheet(sampleData.map((item, index) => ({
+                'No.': index + 1,
                 'รหัสพนักงาน': item.empId,
+                'Bad ID': item.badId,
                 'ชื่อ นามสกุล': item.name,
-                'BAD ID': item.badId,
                 'รุ่นที่เข้างาน': item.batch,
                 'เบอร์โทรศัพท์': item.phone,
                 'Dep.': item.dep,
@@ -1788,8 +1801,8 @@
             XLSX.utils.book_append_sheet(wb, ws, "ฐานข้อมูล");
 
             ws['!cols'] = [
-                { wch: 15 }, { wch: 25 }, { wch: 15 }, { wch: 12 },
-                { wch: 15 }, { wch: 10 }, { wch: 12 }, { wch: 20 }, { wch: 10 }
+                { wch: 6 }, { wch: 15 }, { wch: 15 }, { wch: 25 },
+                { wch: 12 }, { wch: 15 }, { wch: 10 }, { wch: 12 }, { wch: 20 }, { wch: 10 }
             ];
 
             XLSX.writeFile(wb, 'ตัวอย่างฐานข้อมูล.xlsx');
